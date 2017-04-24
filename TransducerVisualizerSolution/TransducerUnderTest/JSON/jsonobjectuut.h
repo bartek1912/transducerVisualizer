@@ -6,8 +6,11 @@
 class JSONObjectUUT : public QObject
 {
     Q_OBJECT
-public:
+private Q_SLOTS:
     void EmptyObject();
+    void OneField();
+    void MoreFields();
+    void NestedObject();
 };
 
 #endif // JSONOBJECTUUT_H

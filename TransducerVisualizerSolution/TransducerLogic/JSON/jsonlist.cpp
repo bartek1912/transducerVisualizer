@@ -14,12 +14,19 @@ JSONList::JSONList(std::istream& in)
     char next = in.peek();
     while(in.peek() != ']')
     {
-        elems.push_back(JSONFactory::produce(in));
-        while(isspace(in.peek()))
-            in.get();
+        if(in.peek() == ',')
+            in.ignore();
+        else
+        {
+            elems.push_back(JSONFactory::produce(in));
+            while(isspace(in.peek()))
+                in.get();
+        }
     }
+    in>>s;
+    assert(s[0] == ']');
 }
-std::shared_ptr<JSONElement> JSONList::operator [](int x)
+std::shared_ptr<JSONElement> JSONList::operator[](std::string x)
 {
     std::istringstream s("");
     return std::shared_ptr<JSONElement>(new JSONString(s));

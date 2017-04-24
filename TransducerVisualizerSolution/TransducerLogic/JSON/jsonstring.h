@@ -4,8 +4,9 @@
 #include <fstream>
 struct JSONString: public JSONElement
 {
+    JSONString(const std::string& v);
     JSONString(std::istream&);
-    virtual std::shared_ptr<JSONElement> operator[](int x);
+    virtual std::shared_ptr<JSONElement> operator[](std::string x);
     virtual operator std::string();
 private:
     std::string val;

@@ -6,7 +6,9 @@
 JSONFactory::JSONFactory(){}
 std::shared_ptr<JSONElement> JSONFactory::produce(std::istream& f)
 {
-    assert(f.peek() != ']' && f.peek() != '}' && f.peek());
+    while(isspace(f.peek()))
+        f.get();
+    assert(f.peek() != ']' && f.peek() != '}' && f.peek() && f.peek() != ',');
     if(f.peek() == '[')
         return std::shared_ptr<JSONElement>(new JSONList(f));
     else if(f.peek() == '{')

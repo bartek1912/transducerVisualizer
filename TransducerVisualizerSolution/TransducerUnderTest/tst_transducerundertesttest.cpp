@@ -2,34 +2,25 @@
 #include <QtTest>
 #include "JSON/jsonlistuut.h"
 #include "JSON/jsonstringuut.h"
-
-class TransducerUnderTestTest : public QObject
-{
-    Q_OBJECT
-
-public:
-    TransducerUnderTestTest();
-};
-
-TransducerUnderTestTest::TransducerUnderTestTest()
-{
-}
-
+#include "JSON/jsonobjectuut.h"
 
 int main(int argc, char** argv)
 {
    int status = 0;
    {
-      TransducerUnderTestTest tc;
-      status |= QTest::qExec(&tc, argc, argv);
-   }
-   {
       JSONStringUUT tc;
-      status |= QTest::qExec(&tc, argc, argv);
+      if(status |= QTest::qExec(&tc, argc, argv))
+         return status;
    }
    {
       JSONListUUT tc;
-      status |= QTest::qExec(&tc, argc, argv);
+      if(status |= QTest::qExec(&tc, argc, argv))
+          return status;
+   }
+   {
+      JSONObjectUUT tc;
+      if(status |= QTest::qExec(&tc, argc, argv))
+          return status;
    }
    return status;
 }

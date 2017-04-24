@@ -6,10 +6,11 @@ JSONString::JSONString(std::istream& f)
     if(val.back() == ',')
         val.pop_back();
 }
+JSONString::JSONString(const std::string& v):val(v){}
 
-std::shared_ptr<JSONElement> JSONString::operator[](int x)
+std::shared_ptr<JSONElement> JSONString::operator[](std::string x)
 {
-   return std::shared_ptr<JSONElement>(new JSONString(*this));
+   return std::shared_ptr<JSONElement>(new JSONString(val));//TODO can't modify
 }
 
 JSONString::operator std::string()
