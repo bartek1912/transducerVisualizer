@@ -7,8 +7,9 @@ void JSONStringUUT::oneString()
     std::string in = "ABC";
     std::istringstream ss(in);
     JSONString str(ss);
+    QVERIFY(ss.eof());
     QVERIFY(str == in);
-    //QVERIFY(*str[0] == in);TODO
+    QVERIFY(*str["0"] == in);
 }
 
 void JSONStringUUT::stringWithComman()
@@ -17,7 +18,7 @@ void JSONStringUUT::stringWithComman()
     std::string in = exp + ",";
     std::istringstream ss(in);
     JSONString str(ss);
+    QVERIFY(ss.eof());
     QVERIFY(str == exp);
-   // QVERIFY(*str[0] == exp);TODO
-
+    QVERIFY(*str["0"] == exp);
 }

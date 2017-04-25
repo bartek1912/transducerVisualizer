@@ -8,7 +8,7 @@ JSONObject::JSONObject(std::istream& in)
     assert(s[0] == '{' && "Object don't start with {");
     while(isspace(in.peek()))
         in.get();
-    while(in.peek() != '}')
+    while(in.peek() != '}' && in.peek())
     {
         if(in.peek() == ',')
             in.ignore();
@@ -29,9 +29,11 @@ JSONObject::JSONObject(std::istream& in)
                 in.get();
         }
     }
+    in>>s;
+    assert(s[0] == '}' && "Not valid out from json object Bparsing");
 }
 
-std::shared_ptr<JSONElement> JSONObject::operator[](std::string x)
+std::shared_ptr<JSONElement> JSONObject::operator[](const std::string& x)
 {
     if(m.find(x) == m.end())
     {

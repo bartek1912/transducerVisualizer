@@ -3,6 +3,7 @@
 #include "jsonstring.h"
 #include <assert.h>
 #include <sstream>
+JSONList::JSONList(){}
 JSONList::JSONList(std::istream& in)
 {
     assert(in.peek() == '[' && "JSONList should start with [");
@@ -26,10 +27,11 @@ JSONList::JSONList(std::istream& in)
     in>>s;
     assert(s[0] == ']');
 }
-std::shared_ptr<JSONElement> JSONList::operator[](std::string x)
+std::shared_ptr<JSONElement> JSONList::operator[](const std::string& x)
 {
-    std::istringstream s("");
-    return std::shared_ptr<JSONElement>(new JSONString(s));
+    int i = stoi(x);
+    assert(i < elems.size() && i >= 0 && "Not valid element number in json list!");
+    return elems[i];
 }
 
 JSONList::operator std::string()

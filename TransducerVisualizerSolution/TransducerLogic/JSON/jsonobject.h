@@ -8,7 +8,7 @@
 struct JSONObject: public JSONElement
 {
     JSONObject(std::istream&);
-    virtual std::shared_ptr<JSONElement> operator[](std::string x);
+    virtual std::shared_ptr<JSONElement> operator[](const std::string& x);
     virtual operator std::string();
 private:
     std::map<std::string, std::shared_ptr<JSONElement> > m;

@@ -10,7 +10,7 @@ public:
     JSONListUUT();
 private:
     void TestEquity(std::string, std::string);
-    std::unique_ptr<JSONList> list;
+    JSONList list;
 private Q_SLOTS:
     void EmptyList();
     void Singleton();

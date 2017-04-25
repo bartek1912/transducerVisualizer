@@ -8,7 +8,7 @@ JSONString::JSONString(std::istream& f)
 }
 JSONString::JSONString(const std::string& v):val(v){}
 
-std::shared_ptr<JSONElement> JSONString::operator[](std::string x)
+std::shared_ptr<JSONElement> JSONString::operator[](const std::string& x)
 {
    return std::shared_ptr<JSONElement>(new JSONString(val));//TODO can't modify
 }

@@ -16,6 +16,7 @@ void JSONObjectUUT::EmptyObject()
     exp.replace('\n', "");
     res.replace('\n', "");
 
+    QVERIFY(ss.eof());
     QVERIFY(res == exp);
 }
 void JSONObjectUUT::OneField()
@@ -29,6 +30,7 @@ void JSONObjectUUT::OneField()
     exp.replace(' ', "");
     res.replace(' ', "");
 
+    QVERIFY(ss.eof());
     QVERIFY(res == exp);
 }
 void JSONObjectUUT::MoreFields()
@@ -38,6 +40,7 @@ void JSONObjectUUT::MoreFields()
 
     JSONObject obj(ss);
 
+    QVERIFY(ss.eof());
     QVERIFY(obj["A"]->toString() == "B");
     QVERIFY(obj["C"]->toString() == "D");
 }
@@ -49,6 +52,7 @@ void JSONObjectUUT::NestedObject()
     JSONObject obj(ss);
 
     std::string res = obj.toString();
+    QVERIFY(ss.eof());
     QVERIFY((*obj["A"])["X"]->toString() == "Y");
     QVERIFY(obj["C"]->toString() == "D");
 }
