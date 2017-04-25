@@ -16,7 +16,7 @@ private Q_SLOTS:
     void Singleton();
     void ListOfStrings();
     void ListOfLists();
-    //void ListOfObjects(); TODO
+    void ListOfObjects();
 };
 
 #endif // JSONLISTUUT_H

@@ -63,3 +63,12 @@ void JSONListUUT::ListOfLists()
     QVERIFY(*(*list["0"])["1"] == "B");
     QVERIFY(*(*list["1"])["0"] == "C");
 }
+void JSONListUUT::ListOfObjects()
+{
+    TestEquity("[ { A: B } ]", "[ { A: B } ]");
+    QVERIFY(*(*list["0"])["A"] == "B");
+    TestEquity("[ { A: B }, { C: D }, [ { E: F } ] ]", "[ { A: B }, { C: D }, [ {E: F} ] ]");
+    QVERIFY(*(*list["0"])["A"] == "B");
+    QVERIFY(*(*list["1"])["C"] == "D");
+    QVERIFY(*(*(*list["2"])["0"])["E"] == "F");
+}

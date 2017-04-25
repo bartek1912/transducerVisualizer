@@ -11,6 +11,7 @@ private Q_SLOTS:
     void OneField();
     void MoreFields();
     void NestedObject();
+    void ListAsAField();
 };
 
 #endif // JSONOBJECTUUT_H

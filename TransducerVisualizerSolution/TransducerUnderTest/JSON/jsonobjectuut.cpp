@@ -56,3 +56,18 @@ void JSONObjectUUT::NestedObject()
     QVERIFY((*obj["A"])["X"]->toString() == "Y");
     QVERIFY(obj["C"]->toString() == "D");
 }
+
+void JSONObjectUUT::ListAsAField()
+{
+    std::string test = "{ A: [ X, Y ] , C: D }";
+    std::istringstream ss(test);
+
+    JSONObject obj(ss);
+
+    std::string res = obj.toString();
+    QVERIFY(ss.eof());
+    QVERIFY((*obj["A"])["0"]->toString() == "X");
+    QVERIFY((*obj["A"])["1"]->toString() == "Y");
+    QVERIFY(obj["C"]->toString() == "D");
+
+}
