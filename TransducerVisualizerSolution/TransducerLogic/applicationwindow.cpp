@@ -20,33 +20,41 @@ ApplicationWindow::ApplicationWindow(QWidget *parent):
     menuBar = new QMenuBar;
 
     auto fileMenu = new QMenu(QObject::tr("&File"));
-    fileMenu->addAction(QObject::tr("Open"));
-    fileMenu->addAction(QObject::tr("Save"));
+    connect(fileMenu->addAction(QObject::tr("Open")),
+                                SIGNAL(triggered()), this, SLOT(notImplemented()));
+    connect(fileMenu->addAction(QObject::tr("Save")),
+                                SIGNAL(triggered()), this, SLOT(notImplemented()));
     auto exitAction = fileMenu->addAction(QObject::tr("Exit"));
     connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
 
     auto transducerMenu = new QMenu(QObject::tr("Transducer"));
-    transducerMenu->addAction(tr("Run <F5>"));
-    transducerMenu->addAction(tr("Step forward <F10>"));
-    transducerMenu->addAction(tr("Clear output"));
-    transducerMenu->addAction(tr("Reset FSM"));
-    transducerMenu->addAction(tr("Reset input stream"));
-    transducerMenu->addAction(tr("Reset all"));
-    auto editInput = transducerMenu->addAction(tr("Edit input"));
-    connect(editInput, SIGNAL(triggered()), this, SLOT(editInput()));
+    connect(transducerMenu->addAction(tr("Run <F5>")),
+                              SIGNAL(triggered()), this, SLOT(notImplemented()));
+    connect(transducerMenu->addAction(tr("Step forward <F10>")),
+                              SIGNAL(triggered()), this, SLOT(notImplemented()));
+    connect(transducerMenu->addAction(tr("Clear output")),
+                              SIGNAL(triggered()), this, SLOT(notImplemented()));
+    connect(transducerMenu->addAction(tr("Reset FSM")),
+                              SIGNAL(triggered()), this, SLOT(notImplemented()));
+    connect(transducerMenu->addAction(tr("Reset input stream")),
+                              SIGNAL(triggered()), this, SLOT(notImplemented()));
+    connect(transducerMenu->addAction(tr("Reset all")),
+            SIGNAL(triggered()), this, SLOT(notImplemented()));
+    connect(transducerMenu->addAction(tr("Edit input")),
+            SIGNAL(triggered()), this, SLOT(editInput()));
     transducerMenu->addAction(tr("Edit pipe"));
 
     auto viewMenu = new QMenu(QObject::tr("View"));
-    auto zoomIn = viewMenu->addAction(tr("Zoom In"));
-    connect(zoomIn, SIGNAL(triggered()), widget, SLOT(zoomIn()));
-    auto zoomOut = viewMenu->addAction(tr("Zoom Out"));
-    connect(zoomOut, SIGNAL(triggered()), widget, SLOT(zoomOut()));
-    auto modelProperties = viewMenu->addAction(tr("Model Properties"));
-    connect(modelProperties, SIGNAL(triggered()), widget, SLOT(zoomOut()))
+    connect(viewMenu->addAction(tr("Zoom In")),
+            SIGNAL(triggered()), widget, SLOT(zoomIn()));
+    connect(viewMenu->addAction(tr("Zoom Out")),
+            SIGNAL(triggered()), widget, SLOT(zoomOut()));
+    connect(viewMenu->addAction(tr("Model Properties")),
+            SIGNAL(triggered()), this, SLOT(notImplemented()));
 
     auto helpMenu = new QMenu(QObject::tr("Help"));
-    auto credits = helpMenu->addAction(tr("Credits"));
-    connect(credits, SIGNAL(triggered()), this, SLOT(showCredits()));
+    connect(helpMenu->addAction(tr("Credits")),
+            SIGNAL(triggered()), this, SLOT(showCredits()));
 
     menuBar->addMenu(fileMenu);
     menuBar->addMenu(transducerMenu);
@@ -75,6 +83,13 @@ void ApplicationWindow::showCredits()
 {
     QMessageBox msgBox;
     msgBox.setText(tr("Application created by Bartłomiej Najdecki in 2017."));
+    msgBox.exec();
+}
+
+void ApplicationWindow::notImplemented()
+{
+    QMessageBox msgBox;
+    msgBox.setText(tr("Not implemented"));
     msgBox.exec();
 }
 

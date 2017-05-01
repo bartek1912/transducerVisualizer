@@ -20,6 +20,7 @@ private:
 public slots:
     void editInput();
     void showCredits();
+    void notImplemented();
 };
 
 #endif // APPLICATIONWINDOW_H
