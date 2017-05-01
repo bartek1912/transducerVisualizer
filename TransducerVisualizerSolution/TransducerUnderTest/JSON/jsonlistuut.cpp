@@ -2,16 +2,18 @@
 #include <QString>
 #include <iostream>
 #include <sstream>
-JSONListUUT::JSONListUUT()
+namespace JSON
+{
+ListUUT::ListUUT()
 {
 
 }
 
-void JSONListUUT::TestEquity(std::string inp, std::string exp)
+void ListUUT::TestEquity(std::string inp, std::string exp)
 {
     std::istringstream iss(inp);
 
-    list = JSONList(iss);
+    list = List(iss);
     QString res = QString::fromStdString(list.toString());
     QString test = QString::fromStdString(exp);
     test.replace(' ', "");
@@ -23,20 +25,20 @@ void JSONListUUT::TestEquity(std::string inp, std::string exp)
                            " GIVEN " +   res.toStdString()).c_str());
 }
 
-void JSONListUUT::EmptyList()
+void ListUUT::EmptyList()
 {
     TestEquity("[ ]", "[]");
     TestEquity("[ ],", "[]");
 }
 
-void JSONListUUT::Singleton()
+void ListUUT::Singleton()
 {
     TestEquity("[ A ]", "[ A ]");
     TestEquity("[ A ],", "[ A ]");
     TestEquity("[ A, ]", "[ A ]");
    QVERIFY(*(list["0"]) == "A");
 }
-void JSONListUUT::ListOfStrings()
+void ListUUT::ListOfStrings()
 {
     TestEquity("[ A, B ]", "[ A, B ]");
     TestEquity("[ A, B, ]", "[ A, B ]");
@@ -46,7 +48,7 @@ void JSONListUUT::ListOfStrings()
     QVERIFY(*(list["2"]) == "C");
     QVERIFY(*(list["4"]) == "B");
 }
-void JSONListUUT::ListOfLists()
+void ListUUT::ListOfLists()
 {
     TestEquity("[ [ A ] ]", "[ [ A ] ]");
     QVERIFY(*(*list["0"])["0"] == "A");
@@ -63,7 +65,7 @@ void JSONListUUT::ListOfLists()
     QVERIFY(*(*list["0"])["1"] == "B");
     QVERIFY(*(*list["1"])["0"] == "C");
 }
-void JSONListUUT::ListOfObjects()
+void ListUUT::ListOfObjects()
 {
     TestEquity("[ { A: B } ]", "[ { A: B } ]");
     QVERIFY(*(*list["0"])["A"] == "B");
@@ -71,4 +73,5 @@ void JSONListUUT::ListOfObjects()
     QVERIFY(*(*list["0"])["A"] == "B");
     QVERIFY(*(*list["1"])["C"] == "D");
     QVERIFY(*(*(*list["2"])["0"])["E"] == "F");
+}
 }

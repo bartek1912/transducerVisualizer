@@ -3,7 +3,9 @@
 
 #include <QObject>
 
-class JSONObjectUUT : public QObject
+namespace JSON
+{
+class ObjectUUT : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
@@ -13,5 +15,6 @@ private Q_SLOTS:
     void NestedObject();
     void ListAsAField();
 };
+}
 
 #endif // JSONOBJECTUUT_H

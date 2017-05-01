@@ -3,12 +3,13 @@
 #include <istream>
 #include <memory>
 #include "jsonelement.h"
-
-class JSONFactory
+namespace JSON {
+class Factory
 {
-    JSONFactory();
+    Factory();
 public:
-    static std::shared_ptr<JSONElement> produce(std::istream& f);
+    static std::shared_ptr<Element> produce(std::istream& f);
 };
+}
 
 #endif // JSONFACTORY_H

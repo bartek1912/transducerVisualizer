@@ -2,56 +2,54 @@
 #include "FSM/discretetransitionfunction.h"
 #include "discreteoutfunction.h"
 #include "JSON/jsonobject.h"
+#include <cstdlib>
 TransducerFactory::TransducerFactory()
 {
-    factor["states"] = load_discrete_states;
+    /*factor["states"] = load_discrete_states;
     factor["start_state"] = load_start_state;
     factor["delta"] = load_delta;
-    factor["sigma"] = load_sigma;
+    factor["sigma"] = load_sigma;*/
 }
 
-Transducer TransducerFactory::produce(std::ifstream& in)
+Transducer TransducerFactory::produceTransducer(std::ifstream& in)
 {
     std::cout<<"Start creating transducer from file."<<std::endl;
     Transducer result;
     std::string control_s, last_accepted_command;
     std::string name;
-    /*JSONObject tr(in);
-    for(auto x: tr)
-    {
-        if(factor.find(x.first) == factor.end())
-        {
-            std::cerr<<"Unkown field in transducer "<<x.first<<". Skipped.\n";
-            continue;
-        }
-        factor[x.first](x.second, result);
-    }*/
-    in>>name>>control_s;
-    std::cout<<"Transducer: "<<name<<"\n";
-    assert(control_s == "{" && "Couldn't find { staring Transducer descripiton!");
-    for(in>>control_s; control_s != "}"; in>>control_s)
-    {
-        if(control_s.back() == ':')
-            control_s.pop_back();
-        if(factor.find(control_s) == factor.end())
-        {
-            std::cerr<<"Unknown property of Transducer: "<<control_s<<" after "<<last_accepted_command<<"\n";
-            std::cerr<<"Known properties("<<factor.size()<<"): ";
-            for(auto& x: factor)
-                std::cerr<<x.first<<", ";
-            std::cerr<<"\n";
-            exit(1);
-        }
-        factor[control_s](in, result);
-        last_accepted_command = control_s;
-    }
+
+
+    JSON::Object tr(in);
+    //result.s(in); TODO initialize states
+    result.initial = result.actual = tr["initial_state"]->toString();
+    load_delta(tr, result);
+    load_sigma(tr, result);
     std::cout<<"Validating transducer.."<<std::endl;
     std::cout<<"Success! Created transducer"<<std::endl;
     return result;
 }
-void TransducerFactory::load_delta(std::ifstream &in, Transducer &t)
+void TransducerFactory::load_delta(JSON::Object& tr, Transducer &t)
 {
-    std::string s;
+
+    DiscreteTransitionFunction dtf;
+    for(auto state: tr["delta"]->identifiers())
+        for(auto seq: (*tr["delta"])[state]->identifiers())
+        {
+            auto dest = (*(*tr["delta"])[state])[seq]->toString();
+            if(seq == "default")
+                dtf.setTransition(std::make_pair(state, '_'), dest);
+            else
+            {
+                if(seq.size() > 1)
+                {
+                    std::cerr<<"Too long seq description in delta "<<seq<<", "<<dest<<" (Did you mean default?)\n";
+                    exit(1);
+                }
+                dtf.setTransition(std::make_pair(state, seq[0]), dest);
+            }
+        }
+    t.delta = new auto(dtf);
+   /* std::string s;
     in>>s;
     assert(s[0] == '{' && "Wrong delta description start");
     if(s.size() > 1)
@@ -88,16 +86,35 @@ void TransducerFactory::load_delta(std::ifstream &in, Transducer &t)
                 dtf.setTransition(make_pair(state, s[0]), destination);
             }
         }
-    }
+    }*/
     t.delta = new auto(dtf);
 }
-void TransducerFactory::load_discrete_states(std::ifstream &in, Transducer &t)
-{
-    load_flat_list(in);
-}
-void TransducerFactory::load_sigma(std::ifstream &in, Transducer &t)
+void TransducerFactory::load_sigma(JSON::Object& tr, Transducer &t)
 {
     DiscreteOutFunction dof;
+    for(auto state: tr["sigma"]->identifiers())
+    {
+        if(state == "default")
+            dof.setAsDefault((*tr["sigma"])[state]->toString());
+        else
+            for(auto seq: (*tr["sigma"])[state]->identifiers())
+            {
+                auto dest = (*(*tr["sigma"])[state])[seq]->toString();
+                if(seq == "default")
+                    dof.addOutput(std::make_pair(state, '_'), dest);
+                else
+                {
+                    if(seq.size() > 1)
+                    {
+                        std::cerr<<"Too long seq description in delta "<<seq<<", "<<dest<<" (Did you mean default?)\n";
+                        exit(1);
+                    }
+                    dof.addOutput(std::make_pair(state, seq[0]), dest);
+                }
+            }
+    }
+    t.sigma.reset( new auto(dof));
+    /*DiscreteOutFunction dof;
     std::string s;
     in>>s;
     assert(s == "{" && "Wrong sigma description start");
@@ -152,41 +169,5 @@ void TransducerFactory::load_sigma(std::ifstream &in, Transducer &t)
 
         }
     }
-    t.sigma = dof;
-}
-void TransducerFactory::load_start_state(std::ifstream &in, Transducer &t)
-{
-    std::string name;
-    in>>name;
-    if(name.back() == ',')
-        name.pop_back();
-    t.initial = t.actual = name;
-}
-std::vector<std::string> TransducerFactory::load_flat_list(std::ifstream& in)
-{
-    std::vector<std::string> res;
-    std::string control_s;
-    in>>control_s;
-    if(control_s[0] != '[')
-    {
-        std::cerr<<"Wrong formatted flat list. Expected [ at the beginning, but given "<<control_s<<"\n";
-        exit(1);
-    }
-    if(control_s.size()==1)
-        in>>control_s;
-    else
-        control_s.erase(0, 1);
-    bool b = false;
-    for(; control_s != "]"; in>>control_s)
-    {
-        if(control_s[control_s.size()-1] == ',')
-            control_s.pop_back();
-        if(b |= control_s.back() == ']')
-            control_s.pop_back();
-        res.push_back(control_s);
-        assert(!in.eof() && "Error while reading argument list");
-        if(b)
-            break;
-    }
-    return res;
+    t.sigma = dof;*/
 }

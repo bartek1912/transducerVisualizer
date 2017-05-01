@@ -1,6 +1,8 @@
 #include "transducer.h"
 Transducer::Transducer(){}
-void Transducer::process(std::string s)
+void Transducer::process(char c)
 {
-    FSM::process(s, sigma);
+    (*sigma)(actual, c);
+    actual = (*delta)(actual, c);
+    std::cerr<<"Transducer: "<<(std::string)(actual)<<"\n";
 }

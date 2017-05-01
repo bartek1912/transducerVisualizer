@@ -1,10 +1,11 @@
 #include "jsonelement.h"
-
-JSONElement::JSONElement()
+namespace JSON
+{
+Element::Element()
 {
 
 }
-std::string JSONElement::toString()
-{
+std::string Element::toString() {
     return static_cast<std::string>(*this);
+}
 }

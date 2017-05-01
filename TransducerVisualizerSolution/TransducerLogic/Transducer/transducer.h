@@ -2,21 +2,19 @@
 #define TRANSDUCER_H
 #include <vector>
 #include <ostream>
+#include <memory>
 #include "outfunction.h"
 #include "FSM/fsm.h"
 /*Mealy*/
 class Transducer : public FSM
 {
-    OutFunction    sigma;
+    std::shared_ptr<OutFunction>    sigma;
 public:
     Transducer();
-    void process(std::string s);
+    void process(char s);
     friend std::ostream& operator << (std::ostream& o, const Transducer& t)
     {
-        //o<<t.sigma;
-        //for(const auto& x: t.sigma.out)
-        //    o<<x;
-        return o;
+        return o<<(*t.sigma);
     }
     friend class TransducerFactory;
 };

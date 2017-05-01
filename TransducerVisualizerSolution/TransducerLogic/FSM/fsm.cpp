@@ -5,13 +5,18 @@ FSM::FSM():
     actual("")
 {
 }
-void FSM::process(std::string s, std::function<void(const State&, char)> callback)
+void FSM::process_dash(std::string s)
 {
-    //char::get_next_char()
     for(auto c: s)
-    {
-        callback(actual, c);
-        actual = (*delta)(actual, c);
-        std::cerr<<"State: "<<(std::string)(actual)<<"\n";
-    }
+        process(c);
+}
+void FSM::process(char c)
+{
+    actual = (*delta)(actual, c);
+    std::cerr<<"State: "<<(std::string)(actual)<<"\n";
+}
+
+std::vector<std::string> FSM::states_description()
+{
+    return {"A", "X", "Y", "AA", "B", "C", "D", "E", "F", "G", "H", "I"};
 }

@@ -8,17 +8,17 @@ int main(int argc, char** argv)
 {
    int status = 0;
    {
-      JSONStringUUT tc;
+      JSON::StringUUT tc;
       if(status |= QTest::qExec(&tc, argc, argv))
          return status;
    }
    {
-      JSONListUUT tc;
+      JSON::ListUUT tc;
       if(status |= QTest::qExec(&tc, argc, argv))
           return status;
    }
    {
-      JSONObjectUUT tc;
+      JSON::ObjectUUT tc;
       if(status |= QTest::qExec(&tc, argc, argv))
           return status;
    }

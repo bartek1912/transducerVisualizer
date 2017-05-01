@@ -3,12 +3,14 @@
 #include <sstream>
 #include <QtTest>
 #include <QString>
-void JSONObjectUUT::EmptyObject()
+namespace JSON
+{
+void ObjectUUT::EmptyObject()
 {
     std::string test = "{ }";
     std::istringstream ss(test);
 
-    JSONObject obj(ss);
+    Object obj(ss);
     QString res = QString::fromStdString(obj.toString());
     QString exp = QString::fromStdString(test);
     exp.replace(' ', "");
@@ -19,12 +21,12 @@ void JSONObjectUUT::EmptyObject()
     QVERIFY(ss.eof());
     QVERIFY(res == exp);
 }
-void JSONObjectUUT::OneField()
+void ObjectUUT::OneField()
 {
     std::string test = "{ A: B }";
     std::istringstream ss(test);
 
-    JSONObject obj(ss);
+    Object obj(ss);
     QString res = QString::fromStdString(obj.toString());
     QString exp = QString::fromStdString(test);
     exp.replace(' ', "");
@@ -33,23 +35,23 @@ void JSONObjectUUT::OneField()
     QVERIFY(ss.eof());
     QVERIFY(res == exp);
 }
-void JSONObjectUUT::MoreFields()
+void ObjectUUT::MoreFields()
 {
     std::string test = "{ A: B, C: D }";
     std::istringstream ss(test);
 
-    JSONObject obj(ss);
+    Object obj(ss);
 
     QVERIFY(ss.eof());
     QVERIFY(obj["A"]->toString() == "B");
     QVERIFY(obj["C"]->toString() == "D");
 }
-void JSONObjectUUT::NestedObject()
+void ObjectUUT::NestedObject()
 {
     std::string test = "{ A: { X: Y } , C: D }";
     std::istringstream ss(test);
 
-    JSONObject obj(ss);
+    Object obj(ss);
 
     std::string res = obj.toString();
     QVERIFY(ss.eof());
@@ -57,12 +59,12 @@ void JSONObjectUUT::NestedObject()
     QVERIFY(obj["C"]->toString() == "D");
 }
 
-void JSONObjectUUT::ListAsAField()
+void ObjectUUT::ListAsAField()
 {
     std::string test = "{ A: [ X, Y ] , C: D }";
     std::istringstream ss(test);
 
-    JSONObject obj(ss);
+    Object obj(ss);
 
     std::string res = obj.toString();
     QVERIFY(ss.eof());
@@ -70,4 +72,5 @@ void JSONObjectUUT::ListAsAField()
     QVERIFY((*obj["A"])["1"]->toString() == "Y");
     QVERIFY(obj["C"]->toString() == "D");
 
+}
 }

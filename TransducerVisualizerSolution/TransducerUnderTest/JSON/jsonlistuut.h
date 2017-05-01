@@ -2,15 +2,16 @@
 #define JSONLISTUUT_H
 #include "JSON/jsonlist.h"
 #include <QtTest>
-
-class JSONListUUT : public QObject
+namespace JSON
+{
+class ListUUT : public QObject
 {
     Q_OBJECT
 public:
-    JSONListUUT();
+    ListUUT();
 private:
     void TestEquity(std::string, std::string);
-    JSONList list;
+    List list;
 private Q_SLOTS:
     void EmptyList();
     void Singleton();
@@ -18,5 +19,6 @@ private Q_SLOTS:
     void ListOfLists();
     void ListOfObjects();
 };
+}
 
 #endif // JSONLISTUUT_H

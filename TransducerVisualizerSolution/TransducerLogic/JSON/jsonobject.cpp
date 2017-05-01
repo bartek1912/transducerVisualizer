@@ -1,7 +1,8 @@
 #include "jsonobject.h"
 #include <iostream>
 #include "JSON/jsonfactory.h"
-JSONObject::JSONObject(std::istream& in)
+namespace JSON {
+Object::Object(std::istream& in)
 {
     std::string s;
     in>>s;
@@ -17,14 +18,14 @@ JSONObject::JSONObject(std::istream& in)
             in>>s;
             while(isspace(in.peek()))
                 in.get();
-            assert((s.back() == ':' || in.peek() == ':') && "Missing : after field name in jsonobject");
+            assert((s .back() == ':' || in.peek() == ':') && "Missing : after field name in JSON Object");
             if(s.back() == ':')
                 s.pop_back();
             else
                 in.get();
             if(m.find(s) != m.end())
                 std::cerr<<"Warning! Multiple definition of field "<<s<<"!\n";
-            m[s] = (JSONFactory::produce(in));
+            m[s] = (Factory::produce(in));
             while(isspace(in.peek()))
                 in.get();
         }
@@ -33,7 +34,7 @@ JSONObject::JSONObject(std::istream& in)
     assert(s[0] == '}' && "Not valid out from json object Bparsing");
 }
 
-std::shared_ptr<JSONElement> JSONObject::operator[](const std::string& x)
+std::shared_ptr<Element> Object::operator[](const std::string& x)
 {
     if(m.find(x) == m.end())
     {
@@ -47,7 +48,7 @@ std::shared_ptr<JSONElement> JSONObject::operator[](const std::string& x)
     return m[x];
 }
 
-JSONObject::operator std::string()
+Object::operator std::string()
 {
     std::string res = "{ ";
     for(auto x: m)
@@ -58,4 +59,12 @@ JSONObject::operator std::string()
         res.pop_back();
     }
     return res + " }";
+}
+std::vector<std::string> Object::identifiers()
+{
+    std::vector<std::string> res;
+    for(auto x: m)
+        res.push_back(x.first);
+    return res;
+}
 }

@@ -12,16 +12,18 @@ protected:
     TransitionFunction* delta;
     States               s;
     State                initial, actual;
+    virtual void process(char c);
 public:
     FSM();
     friend std::istream&    operator <<(std::istream& i, FSM& f)
     {
         std::string s;
         i>>s;
-        f.process(s, [](const State&, char){});
+        f.process_dash(s);
         return i;
     }
-    void process(std::string s, std::function<void(const State&, char)> callback);
+    void process_dash(std::string s);
+    std::vector<std::string> states_description();
 };
 
 

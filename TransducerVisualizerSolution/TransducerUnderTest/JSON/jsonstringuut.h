@@ -2,8 +2,9 @@
 #define JSONSTRINGUUT_H
 
 #include <QObject>
-
-class JSONStringUUT : public QObject
+namespace JSON
+{
+class StringUUT : public QObject
 {
     Q_OBJECT
 public:
@@ -11,6 +12,8 @@ public:
 private Q_SLOTS:
     void oneString();
     void stringWithComman();
+    void oneWordInQuotation();
+    void multipleWordsInQuotation();
 };
-
+}
 #endif // JSONSTRINGUUT_H

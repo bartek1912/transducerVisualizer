@@ -5,12 +5,18 @@
 #include <stack>
 #include <map>
 #include <assert.h>
-struct JSONObject: public JSONElement
+namespace JSON
 {
-    JSONObject(std::istream&);
-    virtual std::shared_ptr<JSONElement> operator[](const std::string& x);
-    virtual operator std::string();
+
+struct Object: public Element
+{
+    Object(std::istream&);
+    virtual std::shared_ptr<Element> operator[](const std::string& x) override;
+    virtual operator std::string() override;
+    virtual unsigned size() { return m.size(); }
+    virtual std::vector<std::string> identifiers() override;
 private:
-    std::map<std::string, std::shared_ptr<JSONElement> > m;
+    std::map<std::string, std::shared_ptr<Element> > m;
 };
+}
 #endif

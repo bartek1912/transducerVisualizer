@@ -33,7 +33,12 @@ SOURCES += FSM/state.cpp \
     JSON/jsonlist.cpp \
     JSON/jsonobject.cpp \
     JSON/jsonelement.cpp \
-    JSON/jsonstring.cpp
+    JSON/jsonstring.cpp \
+    fsmwidget.cpp \
+    node.cpp \
+    edge.cpp \
+    applicationwindow.cpp \
+    mainwindow.cpp
 
 HEADERS += FSM/transducerlogic_global.h\
         FSM/fsm.h \
@@ -49,7 +54,12 @@ HEADERS += FSM/transducerlogic_global.h\
         JSON/jsonlist.h \
         JSON/jsonobject.h \
         JSON/jsonelement.h \
-        JSON/jsonstring.h
+        JSON/jsonstring.h \
+    fsmwidget.h \
+    node.h \
+    edge.h \
+    applicationwindow.h \
+    mainwindow.h
 
 unix {
     target.path = /usr/lib
