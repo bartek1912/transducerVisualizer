@@ -9,6 +9,7 @@ class TransitionFunction
 public:
     TransitionFunction();
     virtual State operator()(const State& s, char c) = 0;
+    virtual std::vector<std::string> possibilites(std::string) = 0;
 };
 
 /*

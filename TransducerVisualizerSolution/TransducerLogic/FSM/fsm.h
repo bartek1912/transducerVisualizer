@@ -15,6 +15,7 @@ protected:
     virtual void process(char c);
 public:
     FSM();
+    virtual void reset();
     friend std::istream&    operator <<(std::istream& i, FSM& f)
     {
         std::string s;
@@ -23,7 +24,8 @@ public:
         return i;
     }
     void process_dash(std::string s);
-    std::vector<std::string> states_description();
+    std::vector<std::string> states_description() const;
+    std::vector<std::pair<std::string, std::string> > edge_description() const;
 };
 
 

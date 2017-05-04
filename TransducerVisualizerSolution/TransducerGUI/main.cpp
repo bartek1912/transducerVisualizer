@@ -9,12 +9,12 @@
 #include <QLabel>
 #include "fsmwidget.h"
 #include "applicationwindow.h"
-QLabel* createLabel(const QString &text)
-{
-    QLabel *label = new QLabel(text);
-    label->setFrameStyle(QFrame::Box | QFrame::Raised);
-    return label;
-}
+/*
+ * Plan:
+ * -Uruchomienie transducera (naprawienie etykiet, dodanie testów bo coś nie działa)
+ * -Konwersja na transducer moore'a
+ * -Dodanie pipe'ów
+ * */
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);

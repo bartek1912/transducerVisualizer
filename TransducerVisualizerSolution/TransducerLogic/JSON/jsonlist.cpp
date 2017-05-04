@@ -14,7 +14,6 @@ List::List(std::istream& in)
     assert(s == "[" && "Missing space after [ or invalid format of json List");
     while(isspace(in.peek()))
         in.get();
-    char next = in.peek();
     while(in.peek() != ']')
     {
         if(in.peek() == ',')
@@ -29,14 +28,20 @@ List::List(std::istream& in)
     in>>s;
     assert(s[0] == ']');
 }
-std::shared_ptr<Element> List::operator[](const std::string& x)
+Element& List::operator[](const std::string& x)
 {
     int i = stoi(x);
     assert(i < elems.size() && i >= 0 && "Not valid element number in json list!");
-    return elems[i];
+    return *elems[i];
+}
+const Element& List::operator[](const std::string& x) const
+{
+    int i = stoi(x);
+    assert(i < elems.size() && i >= 0 && "Not valid element number in json list!");
+    return *elems[i];
 }
 
-List::operator std::string()
+List::operator std::string() const
 {
     std::string res = "[";
     for(size_t i = 0; i <  elems.size(); i++)
@@ -47,7 +52,7 @@ List::operator std::string()
     }
     return res+" ]";
 }
-std::vector<std::string> List::identifiers()
+std::vector<std::string> List::identifiers() const
 {
     std::vector<std::string> res;
     for(int i = 0; i < elems.size(); i++)

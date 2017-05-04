@@ -2,8 +2,8 @@
 #define NODE_H
 #include <QGraphicsItem>
 #include <QGraphicsWidget>
-struct Edge;
 struct FSMWidget;
+struct Edge;
 
 struct Node : public QGraphicsItem
 {
@@ -17,7 +17,10 @@ struct Node : public QGraphicsItem
     void mark();
     void unmark();
     bool operator == (std::string l) { return label.toStdString() == l; }
+    void addEdge(Edge*);
 protected:
+    QList<Edge *> edgeList;
+    void refresh();
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
     FSMWidget* fsm;
     QString label;

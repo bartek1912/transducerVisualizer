@@ -1,4 +1,5 @@
 #include "node.h"
+#include "edge.h"
 #include <QWidget>
 #include <QPainter>
 #include <QStyleOption>
@@ -58,6 +59,11 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     painter->drawText(textRect, Qt::AlignCenter, label);
 }
 
+void Node::addEdge(Edge * ed)
+{
+    edgeList << ed;
+}
+
 QRectF Node::boundingRect() const
 {
     double scale = (marked? 1.5: 1);
@@ -78,19 +84,30 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     switch (change) {
     case ItemPositionHasChanged:
+        refresh();
+        //widget->itemMoved();
         break;
     default:
         break;
     };
 
     return QGraphicsItem::itemChange(change, value);
-
 }
+void Node::refresh()
+{
+    foreach (Edge *edge, edgeList)
+        edge->adjust();
+}
+
 void Node::mark()
 {
+    if(marked == false)
+        update(boundingRect());
     marked = true;
 }
 void Node::unmark()
 {
+    if(marked == true)
+        update(boundingRect());
     marked = false;
 }

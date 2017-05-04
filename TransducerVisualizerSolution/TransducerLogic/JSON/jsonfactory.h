@@ -8,7 +8,7 @@ class Factory
 {
     Factory();
 public:
-    static std::shared_ptr<Element> produce(std::istream& f);
+    static Element* produce(std::istream& f);
 };
 }
 

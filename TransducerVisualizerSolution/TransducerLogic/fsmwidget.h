@@ -3,6 +3,7 @@
 
 #include <QGraphicsView>
 #include <vector>
+#include <sstream>
 #include "node.h"
 #include "Transducer/transducer.h"
 
@@ -10,18 +11,20 @@ class FSMWidget: public QGraphicsView, public Transducer
 {
     Q_OBJECT
 public:
-    FSMWidget(QWidget *parent = 0);
+    FSMWidget(QWidget *parent = 0);//TODO singleton pattern
     virtual ~FSMWidget();
-    void runTransducer();
     void scaleView(qreal);
+    void offsetNodes(int, int);
+    void reset() override;
 protected:
     void loadTransducer(std::string);
-    void updateMarks();
-    std::vector<Node*> nodes;
+    void updateTransducerView();
+    std::map<std::string, Node*> nodes;
     QGraphicsScene* scene;
 public slots:
     void zoomIn();
     void zoomOut();
+    void nextStep(char act);
 };
 
 #endif // FSMWIDGET_H

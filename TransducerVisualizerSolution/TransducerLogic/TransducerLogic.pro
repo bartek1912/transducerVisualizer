@@ -38,7 +38,8 @@ SOURCES += FSM/state.cpp \
     node.cpp \
     edge.cpp \
     applicationwindow.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    FSM/discretetransitionfunction.cpp
 
 HEADERS += FSM/transducerlogic_global.h\
         FSM/fsm.h \

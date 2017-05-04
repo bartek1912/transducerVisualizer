@@ -34,7 +34,7 @@ Object::Object(std::istream& in)
     assert(s[0] == '}' && "Not valid out from json object Bparsing");
 }
 
-std::shared_ptr<Element> Object::operator[](const std::string& x)
+Element& Object::operator[](const std::string& x)
 {
     if(m.find(x) == m.end())
     {
@@ -45,10 +45,24 @@ std::shared_ptr<Element> Object::operator[](const std::string& x)
         std::cerr<<"\n";
         exit(0);
     }
-    return m[x];
+    return *m[x];
 }
 
-Object::operator std::string()
+const Element& Object::operator[](const std::string& x) const
+{
+    if(m.find(x) == m.end())
+    {
+        std::cerr<<"Not found in object field named "<<x<<"\n";
+        std::cerr<<"Available fields: ";
+        for(auto x: m)
+            std::cerr<<x.first<<", ";
+        std::cerr<<"\n";
+        exit(0);
+    }
+    return *m.find(x)->second;
+}
+
+Object::operator std::string() const
 {
     std::string res = "{ ";
     for(auto x: m)
@@ -60,7 +74,7 @@ Object::operator std::string()
     }
     return res + " }";
 }
-std::vector<std::string> Object::identifiers()
+std::vector<std::string> Object::identifiers() const
 {
     std::vector<std::string> res;
     for(auto x: m)

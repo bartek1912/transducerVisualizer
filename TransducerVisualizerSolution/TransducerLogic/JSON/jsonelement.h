@@ -9,12 +9,13 @@ namespace JSON
 struct Element
 {
     Element();
-    virtual std::shared_ptr<Element> operator[](const std::string& x) = 0;
-    virtual operator std::string() = 0;
+    virtual Element& operator[](const std::string& x) = 0;//object handle all containing objects on their own
+    virtual const Element& operator[](const std::string& x) const = 0;//no need for shared_ptr
+    virtual operator std::string() const = 0;
     bool operator == (const std::string& s){return toString() == s;}
-    std::string toString();
+    std::string toString() const;
     virtual unsigned size() = 0;
-    virtual std::vector<std::string> identifiers() = 0;
+    virtual std::vector<std::string> identifiers() const = 0;
 };
 }
 

@@ -5,7 +5,7 @@ Element::Element()
 {
 
 }
-std::string Element::toString() {
+std::string Element::toString() const {
     return static_cast<std::string>(*this);
 }
 }

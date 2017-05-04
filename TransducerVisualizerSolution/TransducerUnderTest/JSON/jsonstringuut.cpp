@@ -11,7 +11,7 @@ void StringUUT::oneString()
     String str(ss);
     QVERIFY(ss.eof());
     QVERIFY(str == in);
-    QVERIFY(*str["0"] == in);
+    QVERIFY(str["0"] == in);
 }
 
 void StringUUT::stringWithComman()
@@ -22,7 +22,7 @@ void StringUUT::stringWithComman()
     String str(ss);
     QVERIFY(ss.eof());
     QVERIFY(str == exp);
-    QVERIFY(*str["0"] == exp);
+    QVERIFY(str["0"] == exp);
 }
 void StringUUT::oneWordInQuotation()
 {
@@ -32,7 +32,7 @@ void StringUUT::oneWordInQuotation()
     String str(ss);
     QVERIFY(ss.eof());
     QVERIFY(str == res);
-    QVERIFY(*str["0"] == res);
+    QVERIFY(str["0"] == res);
 }
 void StringUUT::multipleWordsInQuotation()
 {
@@ -42,6 +42,6 @@ void StringUUT::multipleWordsInQuotation()
     String str(ss);
     QVERIFY(ss.eof());
     QVERIFY(str == res);
-    QVERIFY(*str["0"] == res);
+    QVERIFY(str["0"] == res);
 }
 }

@@ -1,11 +1,13 @@
 #include "fsmwidget.h"
 #include "node.h"
+#include "edge.h"
 #include "Transducer/transducerfactory.h"
-const int WIDTH = 400, HEIGHT = 400;
+#include <QMessageBox>
+const int WIDTH = 700, HEIGHT = 400, MARGIN = 25;//TODO refactor
 
-FSMWidget::FSMWidget(QWidget *parent):
-    QGraphicsView(parent),
-    scene(new QGraphicsScene(this))
+FSMWidget::FSMWidget(QWidget *parent)
+    :QGraphicsView(parent)
+    ,scene(new QGraphicsScene(this))
 {
     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
     scene->setSceneRect(0, 0, WIDTH, HEIGHT);
@@ -16,12 +18,9 @@ FSMWidget::FSMWidget(QWidget *parent):
     setTransformationAnchor(AnchorUnderMouse);
     scale(qreal(0.8), qreal(0.8));
     setMinimumSize(WIDTH, HEIGHT);
-    setWindowTitle(tr("Elastic Nodes"));
+    setWindowTitle(tr("Transducer Visualizer"));
     loadTransducer("nawiasy.json");
 }
-
-
-
 
 void FSMWidget::zoomIn()
 {
@@ -33,6 +32,12 @@ void FSMWidget::zoomOut()
     scaleView(1 / qreal(1.2));
 }
 
+void FSMWidget::nextStep(char act)
+{
+    process(act);
+    updateTransducerView();
+}
+
 void FSMWidget::loadTransducer(std::string path)
 {
     static TransducerFactory factory;
@@ -40,51 +45,60 @@ void FSMWidget::loadTransducer(std::string path)
     static_cast<Transducer&>(*this) = factory.produceTransducer(input);
 
     for(auto x: nodes)
-        delete x;
+        delete x.second;
     nodes.clear();
-    int x = 0, y = 0;
-    for(auto s: states_description())
+    int x = MARGIN, y = MARGIN;
+    auto states = states_description();
+    int w = (WIDTH - 2*MARGIN) / std::ceil(std::sqrt(states.size()) - 1), h = (HEIGHT - 2*MARGIN) / std::ceil(std::sqrt(states.size()) - 1);
+    for(auto s: states)
     {
-        nodes.push_back(new Node(this, s));
-        scene->addItem(nodes.back());
-        nodes.back()->setPos(x, y);
-        x += 70;
+        auto node = new Node(this, s);
+        assert(nodes.find(s) == nodes.end() && "Multiple definitions of state");
+        nodes[s] = node;
+        scene->addItem(node);
+        node->setPos(x, y);
+        x += w;
         if(x >= WIDTH)
         {
-            x = 0;
-            y += 70;
+            x = MARGIN;
+            y += h;
         }
     }
-    updateMarks();
+    for(auto x: edge_description())
+        scene->addItem(new Edge(nodes[x.first],
+                            nodes[x.second], "unknown"));
+    updateTransducerView();
 }
 
 FSMWidget::~FSMWidget()
 {
     for(auto x: nodes)
-        delete x;
+        delete x.second;
     nodes.clear();
     delete scene;
 }
 
-void FSMWidget::updateMarks()
+void FSMWidget::updateTransducerView()
 {
     for(auto& n: nodes)
-        if(*n == actual)
-            n->mark();
+        if(*n.second == actual)
+            n.second->mark();
         else
-            n->unmark();
+            n.second->unmark();
+    viewport()->update();
 }
 
-void FSMWidget::runTransducer()
+void FSMWidget::reset()
 {
-    updateMarks();
-    //while
-    //    doTransducerStep();
-    //TransducerFactory f;
-    //std::ifstream input("nawiasy.json");
-    //Transducer t = f.produceTransducer(input);
-    //t.process_dash("ABABAAABCABC");
-    //std::cout<<t<<"\n";
+    FSM::reset();
+    updateTransducerView();
+}
+
+void FSMWidget::offsetNodes(int y, int x)
+{
+    std::cerr<<"Offset!!!!\n";
+    for(auto& n: nodes)
+        n.second->moveBy(25 * x, 25 * y);
 }
 
 void FSMWidget::scaleView(qreal scaleFactor)

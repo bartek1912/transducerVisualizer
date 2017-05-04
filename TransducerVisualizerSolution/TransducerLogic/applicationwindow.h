@@ -16,10 +16,18 @@ private:
     QLabel* createLabel(const QString &text);
     FSMWidget* widget;
     QMenuBar* menuBar;
-    QLabel* input;
+    QLabel* input, *readChars;
+    std::istringstream fsm_input;
+protected:
+    void keyPressEvent(QKeyEvent *event) override;
 public slots:
-    void editInput();
+    void run();
+    void nextStep();
+    void editInput();//TODO split into classes
     void showCredits();
+    void resetFSM();
+    void resetAll();
+    void resetInput();
     void notImplemented();
 };
 

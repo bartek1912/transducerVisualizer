@@ -28,16 +28,22 @@ String::String(std::istream& f)
 }
 String::String(const std::string& v):val(v){}
 
-std::shared_ptr<Element> String::operator[](const std::string&)
+
+Element& String::operator[](const std::string& x)
 {
-   return std::shared_ptr<Element>(new String(val));//TODO can't modify - maybe ok
+    return *this;
 }
 
-String::operator std::string()
+const Element& String::operator[](const std::string&) const
+{
+   return *this;//TODO can't modify - maybe ok
+}
+
+String::operator std::string() const
 {
     return val;
 }
-std::vector<std::string> String::identifiers()
+std::vector<std::string> String::identifiers() const
 {
     return {"0"};
 }

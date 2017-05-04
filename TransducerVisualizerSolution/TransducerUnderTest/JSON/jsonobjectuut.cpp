@@ -43,8 +43,8 @@ void ObjectUUT::MoreFields()
     Object obj(ss);
 
     QVERIFY(ss.eof());
-    QVERIFY(obj["A"]->toString() == "B");
-    QVERIFY(obj["C"]->toString() == "D");
+    QVERIFY(obj["A"].toString() == "B");
+    QVERIFY(obj["C"].toString() == "D");
 }
 void ObjectUUT::NestedObject()
 {
@@ -55,8 +55,8 @@ void ObjectUUT::NestedObject()
 
     std::string res = obj.toString();
     QVERIFY(ss.eof());
-    QVERIFY((*obj["A"])["X"]->toString() == "Y");
-    QVERIFY(obj["C"]->toString() == "D");
+    QVERIFY(obj["A"]["X"].toString() == "Y");
+    QVERIFY(obj["C"].toString() == "D");
 }
 
 void ObjectUUT::ListAsAField()
@@ -68,9 +68,9 @@ void ObjectUUT::ListAsAField()
 
     std::string res = obj.toString();
     QVERIFY(ss.eof());
-    QVERIFY((*obj["A"])["0"]->toString() == "X");
-    QVERIFY((*obj["A"])["1"]->toString() == "Y");
-    QVERIFY(obj["C"]->toString() == "D");
+    QVERIFY(obj["A"]["0"].toString() == "X");
+    QVERIFY(obj["A"]["1"].toString() == "Y");
+    QVERIFY(obj["C"].toString() == "D");
 
 }
 }
