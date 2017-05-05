@@ -11,9 +11,9 @@
 #include "applicationwindow.h"
 /*
  * Plan:
- * -Uruchomienie transducera (naprawienie etykiet, dodanie testów bo coś nie działa)
  * -Konwersja na transducer moore'a
  * -Dodanie pipe'ów
+ * -Ładownie transducerów z plików (później)
  * */
 
 int main(int argc, char *argv[]) {

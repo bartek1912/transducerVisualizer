@@ -4,5 +4,9 @@ void Transducer::process(char c)
 {
     (*sigma)(actual, c);
     actual = (*delta)(actual, c);
-    std::cerr<<"Transducer: "<<(std::string)(actual)<<"\n";
+}
+
+std::string Transducer::get_output()
+{
+    return sigma->result();
 }

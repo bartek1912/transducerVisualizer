@@ -3,6 +3,7 @@
 #include <QWidget>
 #include <QPainter>
 #include <QStyleOption>
+#include <assert.h>
 const int NODE_WIDTH = 40, NODE_HEIGHT = 40;
 
 Node::Node(FSMWidget *graphWidget, std::string name):
@@ -25,7 +26,7 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
                          NODE_WIDTH*scale, NODE_HEIGHT*scale);
 
     QRadialGradient gradient(-3, -3, 10);
-    if(marked)
+    if(marked || prev_marked)
     {
         gradient.setColorAt(0, Qt::darkGray);
         gradient.setColorAt(1, Qt::black);
@@ -52,7 +53,7 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     font.setBold(true);
     font.setPointSize(14);
     painter->setFont(font);
-    if(marked)
+    if(marked || prev_marked)
         painter->setPen(Qt::white);
     else
         painter->setPen(Qt::black);
@@ -61,6 +62,7 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 void Node::addEdge(Edge * ed)
 {
+    assert(ed);
     edgeList << ed;
 }
 
@@ -101,13 +103,23 @@ void Node::refresh()
 
 void Node::mark()
 {
-    if(marked == false)
+    if(marked == false || prev_marked != marked)
         update(boundingRect());
+    prev_marked = marked;
     marked = true;
 }
 void Node::unmark()
 {
-    if(marked == true)
+    if(marked == true || prev_marked != marked)
         update(boundingRect());
+    prev_marked = marked;
     marked = false;
+}
+bool Node::is_prev_marked() const
+{
+    return prev_marked;
+}
+bool Node::is_marked() const
+{
+    return marked;
 }

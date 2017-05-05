@@ -25,6 +25,9 @@ public slots:
     void zoomIn();
     void zoomOut();
     void nextStep(char act);
+    void organizeOnLine();
+    void organizeOnGrid();
+    void organizeOnRegularPolygon();
 };
 
 #endif // FSMWIDGET_H

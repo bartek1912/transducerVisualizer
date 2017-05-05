@@ -11,7 +11,7 @@ class DiscreteTransitionFunction : public TransitionFunction
 public:
     DiscreteTransitionFunction();
     virtual State operator()(const State& s, char c) override;
-    std::vector<std::string> possibilites(std::string s) override;
+    std::vector<std::pair<char, std::string>> possibilites(std::string s) override;
     void setTransition(std::pair<std::string, char>, std::string);
 };
 

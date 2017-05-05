@@ -16,6 +16,8 @@ struct Node : public QGraphicsItem
     QPainterPath shape() const override;
     void mark();
     void unmark();
+    bool is_prev_marked() const;
+    bool is_marked() const;
     bool operator == (std::string l) { return label.toStdString() == l; }
     void addEdge(Edge*);
 protected:
@@ -25,6 +27,7 @@ protected:
     FSMWidget* fsm;
     QString label;
     bool    marked;
+    bool    prev_marked;
 };
 
 #endif // NODE_H

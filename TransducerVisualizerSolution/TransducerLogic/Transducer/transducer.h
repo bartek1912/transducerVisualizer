@@ -12,6 +12,7 @@ class Transducer : public FSM
 public:
     Transducer();
     void process(char s);
+    std::string get_output();
     friend std::ostream& operator << (std::ostream& o, const Transducer& t)
     {
         return o<<(*t.sigma);

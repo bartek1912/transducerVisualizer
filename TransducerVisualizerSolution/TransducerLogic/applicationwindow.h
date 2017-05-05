@@ -16,7 +16,7 @@ private:
     QLabel* createLabel(const QString &text);
     FSMWidget* widget;
     QMenuBar* menuBar;
-    QLabel* input, *readChars;
+    QLabel* input, *readChars, *output;
     std::istringstream fsm_input;
 protected:
     void keyPressEvent(QKeyEvent *event) override;
@@ -29,6 +29,9 @@ public slots:
     void resetAll();
     void resetInput();
     void notImplemented();
+    void organizeOnLine();
+    void organizeOnGrid();
+    void organizeOnRegularPolygon();
 };
 
 #endif // APPLICATIONWINDOW_H

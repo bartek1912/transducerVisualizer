@@ -58,7 +58,7 @@ class Node;
 class Edge : public QGraphicsItem
 {
 public:
-    Edge(Node *sourceNode, Node *destNode, std::string);
+    Edge(Node *sourceNode, Node *destNode, char);
 
     Node *sourceNode() const;
     Node *destNode() const;

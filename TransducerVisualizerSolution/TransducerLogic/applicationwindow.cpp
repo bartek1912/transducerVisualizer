@@ -20,6 +20,7 @@ ApplicationWindow::ApplicationWindow(QWidget *parent)
     ,menuBar{new QMenuBar}
     ,input{createLabel("")}
     ,readChars{createLabel("")}
+    ,output{createLabel("")}
 {
     auto fileMenu = new QMenu(QObject::tr("File"));
     connect(fileMenu->addAction(QObject::tr("Open")),
@@ -44,13 +45,18 @@ ApplicationWindow::ApplicationWindow(QWidget *parent)
             SIGNAL(triggered()), this, SLOT(resetAll()));
     connect(transducerMenu->addAction(tr("Edit input")),
             SIGNAL(triggered()), this, SLOT(editInput()));
-    transducerMenu->addAction(tr("Edit pipe"));
 
     auto viewMenu = new QMenu(QObject::tr("View"));
     connect(viewMenu->addAction(tr("Zoom In")),
             SIGNAL(triggered()), widget, SLOT(zoomIn()));
     connect(viewMenu->addAction(tr("Zoom Out")),
             SIGNAL(triggered()), widget, SLOT(zoomOut()));
+    connect(viewMenu->addAction(tr("Arrange nodes on line")),
+            SIGNAL(triggered()), widget, SLOT(organizeOnLine()));
+    connect(viewMenu->addAction(tr("Arrange nodes on grid")),
+            SIGNAL(triggered()), widget, SLOT(organizeOnGrid()));
+    connect(viewMenu->addAction(tr("Arrange nodes on regular polygon")),
+            SIGNAL(triggered()), widget, SLOT(organizeOnRegularPolygon()));
 
     auto helpMenu = new QMenu(QObject::tr("Help"));
     connect(helpMenu->addAction(tr("Credits")),
@@ -63,16 +69,35 @@ ApplicationWindow::ApplicationWindow(QWidget *parent)
 
     QVBoxLayout* mainLayout = new QVBoxLayout;
 
+    QHBoxLayout* inputLayout = new QHBoxLayout;
+    QWidget* inputWidget = new QWidget;
+    inputLayout->addWidget(createLabel("Input buffer:"));
+    inputLayout->addWidget(input);
+    inputWidget->setLayout(inputLayout);
+
+    QHBoxLayout* readLayout = new QHBoxLayout;
+    QWidget* readWidget = new QWidget;
+    readLayout->addWidget(createLabel("Read:"));
+    readLayout->addWidget(readChars);
+    readWidget->setLayout(readLayout);
+
+    QHBoxLayout* outputLayout = new QHBoxLayout;
+    QWidget* outputWidget = new QWidget;
+    outputLayout->addWidget(createLabel("Output buffer:"));
+    outputLayout->addWidget(output);
+    outputWidget->setLayout(outputLayout);
+
+
     mainLayout->setMenuBar(menuBar);
     mainLayout->addWidget(widget);
-    mainLayout->addWidget(readChars);
-    mainLayout->addWidget(input);
-    mainLayout->addWidget(createLabel("Transducer result"));
+    mainLayout->addWidget(readWidget);
+    mainLayout->addWidget(inputWidget);
+    mainLayout->addWidget(outputWidget);
 
     QWidget* central_widget = new QWidget;
     central_widget->setLayout(mainLayout);
     this->setCentralWidget(central_widget);
-}
+}\
 
 void ApplicationWindow::run()
 {
@@ -91,6 +116,7 @@ void ApplicationWindow::nextStep()
         readChars->setText(readChars->text() + fsm_input.peek());
         input->setText(input->text().mid(1));
         widget->nextStep(fsm_input.get());
+        output->setText(QString::fromStdString(widget->get_output()));
     }
     else
     {

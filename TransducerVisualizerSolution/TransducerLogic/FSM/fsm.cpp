@@ -18,19 +18,18 @@ void FSM::process_dash(std::string s)
 void FSM::process(char c)
 {
     actual = (*delta)(actual, c);
-    std::cerr<<"State: "<<(std::string)(actual)<<"\n";
 }
 
 std::vector<std::string> FSM::states_description() const
 {
     return s.description();
 }
-std::vector<std::pair<std::string, std::string> > FSM::edge_description() const
+std::vector<std::pair<char, std::pair<std::string, std::string>>> FSM::edge_description() const
 {
-    std::vector<std::pair<std::string, std::string> > res;
+    std::vector<std::pair<char, std::pair<std::string, std::string>>> res;
     for(auto from: states_description())
         for(auto to: (*delta).possibilites(from))
-            res.push_back(std::make_pair(from, to));
+            res.push_back(std::make_pair(to.first, std::make_pair(from, to.second)));
     return res;
     /*return {std::make_pair("A", "X"),
                 std::make_pair("Y", "X"),

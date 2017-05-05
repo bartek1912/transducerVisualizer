@@ -58,13 +58,15 @@
 static const double Pi = 3.14159265358979323846264338327950288419717;
 static double TwoPi = 2.0 * Pi;
 
-Edge::Edge(Node *sourceNode, Node *destNode, std::string label)
-    : arrowSize(10),
-      label(label)
+Edge::Edge(Node *source, Node *dest, char label)
+    :source(source)
+    ,dest(dest)
+    ,arrowSize(15)
+    ,label(1, label)
 {
+    if(label == '_')
+        this->label = "else";
     setAcceptedMouseButtons(0);
-    source = sourceNode;
-    dest = destNode;
     source->addEdge(this);
     dest->addEdge(this);
     adjust();
@@ -119,14 +121,15 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
     if (!source || !dest)
         return;
 
+    bool special_edge = source->is_prev_marked() && dest->is_marked();
     QLineF line(sourcePoint, destPoint);
     if (qFuzzyCompare(line.length(), qreal(0.)))
         return;
 
     // Draw the line itself
-    painter->setPen(QPen(Qt::white, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    painter->setPen(QPen((special_edge ? Qt::black : Qt::white), 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter->drawLine(line);
-    painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    painter->setPen(QPen((special_edge ? Qt::white : Qt::black), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter->drawLine(line);
 
     // Draw the arrows
@@ -149,7 +152,7 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
     font.setBold(true);
     font.setPointSize(12);
     painter->setFont(font);
-    painter->setPen(Qt::black);
+    painter->setPen((special_edge ? Qt::red : Qt::black));
     painter->setBrush(Qt::white);
     painter->drawRect(labelRect);
     painter->drawText(labelRect, Qt::AlignCenter, label.c_str());

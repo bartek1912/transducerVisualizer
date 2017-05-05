@@ -25,7 +25,7 @@ public:
     }
     void process_dash(std::string s);
     std::vector<std::string> states_description() const;
-    std::vector<std::pair<std::string, std::string> > edge_description() const;
+    std::vector<std::pair<char, std::pair<std::string, std::string>>> edge_description() const;
 };
 
 

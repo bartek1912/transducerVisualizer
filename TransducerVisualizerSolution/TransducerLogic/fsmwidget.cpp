@@ -3,7 +3,7 @@
 #include "edge.h"
 #include "Transducer/transducerfactory.h"
 #include <QMessageBox>
-const int WIDTH = 700, HEIGHT = 400, MARGIN = 25;//TODO refactor
+const int WIDTH = 700, HEIGHT = 400, MARGIN = 10;//TODO refactor
 
 FSMWidget::FSMWidget(QWidget *parent)
     :QGraphicsView(parent)
@@ -20,6 +20,12 @@ FSMWidget::FSMWidget(QWidget *parent)
     setMinimumSize(WIDTH, HEIGHT);
     setWindowTitle(tr("Transducer Visualizer"));
     loadTransducer("nawiasy.json");
+    if(nodes.size() <= 2)
+        organizeOnLine();
+    else if(nodes.size() <= 8)
+        organizeOnRegularPolygon();
+    else
+       organizeOnGrid();
 }
 
 void FSMWidget::zoomIn()
@@ -47,26 +53,21 @@ void FSMWidget::loadTransducer(std::string path)
     for(auto x: nodes)
         delete x.second;
     nodes.clear();
-    int x = MARGIN, y = MARGIN;
     auto states = states_description();
-    int w = (WIDTH - 2*MARGIN) / std::ceil(std::sqrt(states.size()) - 1), h = (HEIGHT - 2*MARGIN) / std::ceil(std::sqrt(states.size()) - 1);
     for(auto s: states)
     {
         auto node = new Node(this, s);
         assert(nodes.find(s) == nodes.end() && "Multiple definitions of state");
         nodes[s] = node;
         scene->addItem(node);
-        node->setPos(x, y);
-        x += w;
-        if(x >= WIDTH)
-        {
-            x = MARGIN;
-            y += h;
-        }
     }
-    for(auto x: edge_description())
-        scene->addItem(new Edge(nodes[x.first],
-                            nodes[x.second], "unknown"));
+    for(const  auto& x: edge_description())
+    {
+        assert(nodes.find(x.second.first) != nodes.end()
+                && nodes.find(x.second.second) != nodes.end());
+        scene->addItem(new Edge(nodes[x.second.first],
+                            nodes[x.second.second], x.first));
+    }
     updateTransducerView();
 }
 
@@ -96,7 +97,6 @@ void FSMWidget::reset()
 
 void FSMWidget::offsetNodes(int y, int x)
 {
-    std::cerr<<"Offset!!!!\n";
     for(auto& n: nodes)
         n.second->moveBy(25 * x, 25 * y);
 }
@@ -108,4 +108,57 @@ void FSMWidget::scaleView(qreal scaleFactor)
         return;
 
     scale(scaleFactor, scaleFactor);
+}
+
+
+void FSMWidget::organizeOnLine()
+{
+    int x = MARGIN, y = MARGIN;
+    assert(nodes.size());
+    int w = (WIDTH - 2*MARGIN) / std::ceil(nodes.size() - 1), h = (HEIGHT - 2*MARGIN) / std::ceil(nodes.size() - 1);
+    for(auto& act: nodes)
+    {
+        Node* node = act.second;
+        node->setPos(x, y);
+        x += w;
+        y += h;
+    }
+
+}
+
+void FSMWidget::organizeOnGrid()
+{
+    int x = MARGIN, y = MARGIN;
+    assert(nodes.size());
+    int w = (WIDTH - 2*MARGIN) / std::ceil(std::sqrt(nodes.size()) - 1), h = (HEIGHT - 2*MARGIN) / std::floor(std::sqrt(nodes.size()) - 1);
+    for(auto& act: nodes)
+    {
+        Node* node = act.second;
+        node->setPos(x, y);
+        x += w;
+        if(x >= WIDTH)
+        {
+            x = MARGIN;
+            y += h;
+        }
+    }
+
+}
+
+const double pi = 3.1415;
+
+void FSMWidget::organizeOnRegularPolygon()
+{
+    int x = WIDTH/2, y = HEIGHT/2, i = 0, w = WIDTH/2 - MARGIN, h = HEIGHT/2 - MARGIN;
+    for(auto act: nodes)
+    {
+        auto node = act.second;
+        double delta_x = sin(i * 2.0 * pi / nodes.size()) * w;
+        double delta_y = -cos(i * 2.0 * pi / (nodes.size()))*h;
+        delta_x += x;
+        delta_y += y;
+        node->setPos(delta_x,
+                     delta_y);
+        i++;
+    }
 }

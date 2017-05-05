@@ -5,15 +5,15 @@
 #include "FSM/state.h"
 struct OutFunction
 {
+    std::string result();
     virtual void operator()(std::string s, char c) = 0;
 protected:
-    std::vector<char> out;
+    std::string out;
     friend std::ostream& operator << (std::ostream& o, const OutFunction& t)
     {
-        for(auto x: t.out)
-            o<<x;
-        return o;
+        return o<<t.out;
     }
+public:
 };
 
 #endif // OUTFUNCTION_H
