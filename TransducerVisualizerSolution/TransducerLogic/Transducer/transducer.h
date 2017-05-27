@@ -13,6 +13,7 @@ public:
     Transducer();
     void process(char s);
     std::string get_output();
+    virtual void reset() override;
     friend std::ostream& operator << (std::ostream& o, const Transducer& t)
     {
         return o<<(*t.sigma);

@@ -115,6 +115,11 @@ void Node::unmark()
     prev_marked = marked;
     marked = false;
 }
+void Node::reset()
+{
+    prev_marked = marked = false;
+}
+
 bool Node::is_prev_marked() const
 {
     return prev_marked;

@@ -19,6 +19,7 @@ private:
     QLabel  *input, *output;
     std::istringstream fsm_input;
     std::vector<TransducerControlWidget*> transducers;
+    std::string initialInputText;
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     QWidget* createLabel(const QString &text, QWidget* text2);

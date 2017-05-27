@@ -10,8 +10,9 @@
 class FSMWidget: public QGraphicsView, public Transducer
 {
     Q_OBJECT
+    enum {WIDTH = 700, HEIGHT = 400, MARGIN = 10};
 public:
-    FSMWidget(QWidget *parent = 0);//TODO singleton pattern
+    FSMWidget(std::string = "nawiasy.json", QWidget *parent = 0);//TODO singleton pattern
     virtual ~FSMWidget();
     void scaleView(qreal);
     void offsetNodes(int, int);

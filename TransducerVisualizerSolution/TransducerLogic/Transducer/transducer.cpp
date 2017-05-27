@@ -10,3 +10,8 @@ std::string Transducer::get_output()
 {
     return sigma->result();
 }
+void Transducer::reset()
+{
+    FSM::reset();
+    sigma->reset();
+}

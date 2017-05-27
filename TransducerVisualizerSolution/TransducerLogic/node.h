@@ -16,6 +16,7 @@ struct Node : public QGraphicsItem
     QPainterPath shape() const override;
     void mark();
     void unmark();
+    void reset();
     bool is_prev_marked() const;
     bool is_marked() const;
     bool operator == (std::string l) { return label.toStdString() == l; }

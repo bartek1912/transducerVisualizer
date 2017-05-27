@@ -6,16 +6,23 @@ DiscreteOutFunction::DiscreteOutFunction():default_out("")
 
 }
 
-void DiscreteOutFunction::operator()(std::string s, char c)
+void DiscreteOutFunction::operator()(std::string state, char c)
 {
-    if(output.find(std::make_pair(s, c)) != output.end())
-        for(char c: output[std::make_pair(s, c)])
-            out.push_back(c);
-    else if(output.find(std::make_pair(s, '_')) != output.end())
+    if(output.find(std::make_pair(state, c)) != output.end())
     {
-        std::string res = output[std::make_pair(s, '_')];
-        for(char c: res)
+        std::cerr<<"For state "<<state<<" and char "<<c<<" out: "
+                <<output[std::make_pair(state, c)]<<"\n";
+        for(char cX: output[std::make_pair(state, c)])
+            out.push_back(cX);
+    }
+    else if(output.find(std::make_pair(state, '_')) != output.end())
+    {
+        std::string res = output[std::make_pair(state, '_')];
+        if(res == "identity")
             out.push_back(c);
+        else
+            for(char c: res)
+                out.push_back(c);
     }
 }
 

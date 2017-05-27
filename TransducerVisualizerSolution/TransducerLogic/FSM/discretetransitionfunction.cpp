@@ -16,11 +16,16 @@ State DiscreteTransitionFunction::operator()(const State& s, char c)
         auto dest = transition[std::make_pair(s, c)];
         return dest;
     }
-    else
+    else if(transition.find(std::make_pair(s, '_')) != transition.end())
     {
-        assert(transition.find(std::make_pair(s, '_')) != transition.end());
+        assert(transition.find(std::make_pair(s, '_')) != transition.end() && "Transition function doesn't know what to do with this state!");
         auto dest = transition[std::make_pair(s, '_')];
         return dest;
+    }
+    else
+    {
+        std::cerr<<"Don't know what to do in state "<<s.toString()<<" with char "<<c<<"\n";
+        return s;
     }
 }
 

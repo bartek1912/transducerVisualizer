@@ -3,9 +3,8 @@
 #include "edge.h"
 #include "Transducer/transducerfactory.h"
 #include <QMessageBox>
-const int WIDTH = 700, HEIGHT = 400, MARGIN = 10;//TODO refactor
 
-FSMWidget::FSMWidget(QWidget *parent)
+FSMWidget::FSMWidget(std::string file_path, QWidget* parent)
     :QGraphicsView(parent)
     ,scene(new QGraphicsScene(this))
 {
@@ -19,7 +18,7 @@ FSMWidget::FSMWidget(QWidget *parent)
     scale(qreal(0.8), qreal(0.8));
     setMinimumSize(WIDTH, HEIGHT);
     setWindowTitle(tr("Transducer Visualizer"));
-    loadTransducer("nawiasy.json");
+    loadTransducer(file_path);
     if(nodes.size() <= 2)
         organizeOnLine();
     else if(nodes.size() <= 8)
@@ -91,8 +90,13 @@ void FSMWidget::updateTransducerView()
 
 void FSMWidget::reset()
 {
-    FSM::reset();
-    updateTransducerView();
+    Transducer::reset();
+    for(auto& n: nodes)
+    {
+        n.second->reset();
+        if(*n.second == actual)
+            n.second->mark();
+    }
 }
 
 void FSMWidget::offsetNodes(int y, int x)

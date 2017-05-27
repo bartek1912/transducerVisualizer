@@ -3,8 +3,8 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
-TransducerControlWidget::TransducerControlWidget(std::string name)
-    :widget {new FSMWidget}
+TransducerControlWidget::TransducerControlWidget(std::string name, std::string file_path)
+    :widget {new FSMWidget(file_path)}
     ,readChars{createLabel("")}
     ,output{createLabel("")}
     ,centralWidget{new QWidget}
@@ -42,6 +42,7 @@ void TransducerControlWidget::resetFSM()
 {
     widget->reset();
     readChars->setText("");
+    output->setText("");
 }
 
 std::string TransducerControlWidget::getName()
@@ -59,4 +60,9 @@ void TransducerControlWidget::nextStep(char c)
 {
     readChars->setText(readChars->text() + c);
     widget->nextStep(c);
+    output->setText(QString::fromStdString(widget->get_output()));
+}
+QLabel* TransducerControlWidget::getOutputLabel()
+{
+    return output;
 }

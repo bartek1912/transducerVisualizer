@@ -7,6 +7,7 @@
 #include <QVBoxLayout>
 #include <QInputDialog>
 #include <QDir>
+#include <QFileDialog>
 
 ApplicationWindow::ApplicationWindow(QWidget *parent)
     :QMainWindow(parent)
@@ -71,26 +72,34 @@ ApplicationWindow::ApplicationWindow(QWidget *parent)
     menuBar->addMenu(helpMenu);
 
     QWidget* window = new QWidget;
-    QVBoxLayout* tabLayout = new QVBoxLayout;
-    tabLayout->setMenuBar(menuBar);
-    tabLayout->addWidget(tabWidget);
-    tabLayout->addWidget(createLabel("Pipe Input:", input));
-    tabLayout->addWidget(createLabel("Pipe Output:", output));
-    window->setLayout(tabLayout);
+    QVBoxLayout* windowLayout = new QVBoxLayout;
+    windowLayout->setMenuBar(menuBar);
+    windowLayout->addWidget(tabWidget);
+    windowLayout->addWidget(createLabel("Pipe Input:", input));
+    windowLayout->addWidget(createLabel("Pipe Output:", output));
+    window->setLayout(windowLayout);
     this->setCentralWidget(window);
 }\
 
 void ApplicationWindow::addToPipe()
 {
-    bool ok;
+    bool ok2;
+    QString path = QFileDialog::getOpenFileName(this, tr("Open Transducer"),
+                                                QDir::currentPath(), tr("JSON Files (*.json)"));
     QString text = QInputDialog::getText(this, tr("Add new transducer"),
                                          tr("Type name of new transducer:"), QLineEdit::Normal,
-                                         "", &ok);
-    if(ok && !text.isEmpty())
+                                         "", &ok2);
+    if(ok2 && !text.isEmpty() && !path.isEmpty())
     {
-        auto w = new TransducerControlWidget(text.toStdString());
+        auto w = new TransducerControlWidget(text.toStdString(), path.toStdString());
         transducers.push_back(w);
         tabWidget->addTab(w->getWidget(), w->getName().c_str());
+    }
+    else
+    {
+        QMessageBox msgBox;
+        msgBox.setText(tr("Wrong file given or transducer name."));
+        msgBox.exec();
     }
 }
 
@@ -110,12 +119,10 @@ void ApplicationWindow::editInput()
                                              "", &ok);
         if (ok && !text.isEmpty())
         {
-            fsm_input.str(text.toStdString());
-            fsm_input.clear();
-            input->setText(text);
+            initialInputText = text.toStdString();
+            resetInput();
             QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Transducer"), "Reset transducers?",
                                           QMessageBox::Yes|QMessageBox::No);
-
             if (reply == QMessageBox::Yes)
                 resetFSM();
         }
@@ -135,16 +142,15 @@ void ApplicationWindow::resetAll()
 }
 void ApplicationWindow::resetFSM()
 {
-    //for(auto x: )//TODO
-    /*widget->reset();
-    readChars->setText("");*/
+    for(auto x: transducers)
+        x->resetFSM();
 }
 void ApplicationWindow::resetInput()
 {
-    /*fsm_input.str((readChars->text() + input->text()).toStdString());//TODO
+    tabWidget->setCurrentIndex(0);
+    fsm_input.str(initialInputText);
     fsm_input.clear();
-    input->setText(readChars->text() + input->text());
-    readChars->setText("");*/
+    input->setText(QString::fromStdString(initialInputText));
 }
 
 void ApplicationWindow::showCredits()
@@ -253,19 +259,28 @@ void ApplicationWindow::nextStep()
     if(fsm_input.peek() == 0)
     {
         fsm_input.ignore();
-        input->setText(input->text().mid(1));
+        input->setText(input->text().mid(1));//cut first string
     }
     if(!fsm_input.eof())
     {
         input->setText(input->text().mid(1));
-        transducers[0]->nextStep(fsm_input.get());
-        //output->setText(QString::fromStdString(widget->get_output()));//TODO
+        transducers[tabWidget->currentIndex()]->nextStep(fsm_input.get());
+        output->setText(transducers.back()->getOutputLabel()->text());
     }
     else
     {
-        QMessageBox msgBox;
-        msgBox.setText(tr("Input is empty"));
-        msgBox.exec();
+        if(tabWidget->currentIndex() + 1 < transducers.size())
+        {
+            fsm_input.str(transducers[tabWidget->currentIndex()]->getOutputLabel()->text().toStdString());
+            fsm_input.clear();
+            tabWidget->setCurrentIndex(tabWidget->currentIndex()+1);
+        }
+        else
+        {
+            QMessageBox msgBox;
+            msgBox.setText(tr("Input is empty"));
+            msgBox.exec();
+        }
     }
 
 }
