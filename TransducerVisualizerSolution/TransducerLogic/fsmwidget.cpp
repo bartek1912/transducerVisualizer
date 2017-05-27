@@ -162,3 +162,17 @@ void FSMWidget::organizeOnRegularPolygon()
         i++;
     }
 }
+
+void FSMWidget::convertToMoore()
+{
+    QMessageBox msgBox;
+    msgBox.setText(tr("Not implemented"));
+    msgBox.exec();
+}
+
+void FSMWidget::convertToMealy()
+{
+    QMessageBox msgBox;
+    msgBox.setText(tr("Not implemented"));
+    msgBox.exec();
+}

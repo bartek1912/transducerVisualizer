@@ -8,19 +8,12 @@
 #include <QInputDialog>
 #include <QDir>
 
-QLabel* ApplicationWindow::createLabel(const QString &text)
-{
-    QLabel *label = new QLabel(text);
-    label->setFrameStyle(QFrame::Box | QFrame::Raised);
-    return label;
-}
 ApplicationWindow::ApplicationWindow(QWidget *parent)
     :QMainWindow(parent)
-    ,widget {new FSMWidget}
     ,menuBar{new QMenuBar}
-    ,input{createLabel("")}
-    ,readChars{createLabel("")}
-    ,output{createLabel("")}
+    ,tabWidget{new QTabWidget}
+    ,input{new QLabel}
+    ,output{new QLabel}
 {
     auto fileMenu = new QMenu(QObject::tr("File"));
     connect(fileMenu->addAction(QObject::tr("Open")),
@@ -43,105 +36,89 @@ ApplicationWindow::ApplicationWindow(QWidget *parent)
                               SIGNAL(triggered()), this, SLOT(resetInput()));
     connect(transducerMenu->addAction(tr("Reset all")),
             SIGNAL(triggered()), this, SLOT(resetAll()));
-    connect(transducerMenu->addAction(tr("Edit input")),
+    /*connect(transducerMenu->addAction(tr("Convert to moore'a")),//TODO
+            SIGNAL(triggered()), widget, SLOT(convertToMoore()));
+    connect(transducerMenu->addAction(tr("Convert to mealy")),
+            SIGNAL(triggered()), widget, SLOT(convertToMealy()));*/
+
+    auto pipeMenu = new QMenu(QObject::tr("Pipe"));
+    connect(pipeMenu->addAction(tr("Add transducer")),
+                              SIGNAL(triggered()), this, SLOT(addToPipe()));
+    connect(pipeMenu->addAction(tr("Remove transducer")),
+                              SIGNAL(triggered()), this, SLOT(notImplemented()));
+    connect(pipeMenu->addAction(tr("Edit input")),
             SIGNAL(triggered()), this, SLOT(editInput()));
 
     auto viewMenu = new QMenu(QObject::tr("View"));
     connect(viewMenu->addAction(tr("Zoom In")),
-            SIGNAL(triggered()), widget, SLOT(zoomIn()));
+            SIGNAL(triggered()), this, SLOT(zoomInCurrent()));
     connect(viewMenu->addAction(tr("Zoom Out")),
-            SIGNAL(triggered()), widget, SLOT(zoomOut()));
+            SIGNAL(triggered()), this, SLOT(zoomOutCurrent()));
     connect(viewMenu->addAction(tr("Arrange nodes on line")),
-            SIGNAL(triggered()), widget, SLOT(organizeOnLine()));
+            SIGNAL(triggered()), this, SLOT(organizeOnLineCurrent()));
     connect(viewMenu->addAction(tr("Arrange nodes on grid")),
-            SIGNAL(triggered()), widget, SLOT(organizeOnGrid()));
+            SIGNAL(triggered()), this, SLOT(organizeOnGridCurrent()));
     connect(viewMenu->addAction(tr("Arrange nodes on regular polygon")),
-            SIGNAL(triggered()), widget, SLOT(organizeOnRegularPolygon()));
-
+            SIGNAL(triggered()), this, SLOT(organizeOnRegularPolygonCurrent()));
     auto helpMenu = new QMenu(QObject::tr("Help"));
     connect(helpMenu->addAction(tr("Credits")),
             SIGNAL(triggered()), this, SLOT(showCredits()));
 
     menuBar->addMenu(fileMenu);
+    menuBar->addMenu(pipeMenu);
     menuBar->addMenu(transducerMenu);
     menuBar->addMenu(viewMenu);
     menuBar->addMenu(helpMenu);
 
-    QVBoxLayout* mainLayout = new QVBoxLayout;
-
-    QHBoxLayout* inputLayout = new QHBoxLayout;
-    QWidget* inputWidget = new QWidget;
-    inputLayout->addWidget(createLabel("Input buffer:"));
-    inputLayout->addWidget(input);
-    inputWidget->setLayout(inputLayout);
-
-    QHBoxLayout* readLayout = new QHBoxLayout;
-    QWidget* readWidget = new QWidget;
-    readLayout->addWidget(createLabel("Read:"));
-    readLayout->addWidget(readChars);
-    readWidget->setLayout(readLayout);
-
-    QHBoxLayout* outputLayout = new QHBoxLayout;
-    QWidget* outputWidget = new QWidget;
-    outputLayout->addWidget(createLabel("Output buffer:"));
-    outputLayout->addWidget(output);
-    outputWidget->setLayout(outputLayout);
-
-
-    mainLayout->setMenuBar(menuBar);
-    mainLayout->addWidget(widget);
-    mainLayout->addWidget(readWidget);
-    mainLayout->addWidget(inputWidget);
-    mainLayout->addWidget(outputWidget);
-
-    QWidget* central_widget = new QWidget;
-    central_widget->setLayout(mainLayout);
-    this->setCentralWidget(central_widget);
+    QWidget* window = new QWidget;
+    QVBoxLayout* tabLayout = new QVBoxLayout;
+    tabLayout->setMenuBar(menuBar);
+    tabLayout->addWidget(tabWidget);
+    tabLayout->addWidget(createLabel("Pipe Input:", input));
+    tabLayout->addWidget(createLabel("Pipe Output:", output));
+    window->setLayout(tabLayout);
+    this->setCentralWidget(window);
 }\
 
-void ApplicationWindow::run()
+void ApplicationWindow::addToPipe()
 {
-    while(!fsm_input.eof())
-        nextStep();
-}
-void ApplicationWindow::nextStep()
-{
-    if(fsm_input.peek() == 0)
+    bool ok;
+    QString text = QInputDialog::getText(this, tr("Add new transducer"),
+                                         tr("Type name of new transducer:"), QLineEdit::Normal,
+                                         "", &ok);
+    if(ok && !text.isEmpty())
     {
-        fsm_input.ignore();
-        input->setText(input->text().mid(1));
-    }
-    if(!fsm_input.eof())
-    {
-        readChars->setText(readChars->text() + fsm_input.peek());
-        input->setText(input->text().mid(1));
-        widget->nextStep(fsm_input.get());
-        output->setText(QString::fromStdString(widget->get_output()));
-    }
-    else
-    {
-        QMessageBox msgBox;
-        msgBox.setText(tr("Input is empty"));
-        msgBox.exec();
+        auto w = new TransducerControlWidget(text.toStdString());
+        transducers.push_back(w);
+        tabWidget->addTab(w->getWidget(), w->getName().c_str());
     }
 }
 
 void ApplicationWindow::editInput()
 {
-    bool ok;
-    QString text = QInputDialog::getText(this, tr("Type new input"),
-                                         tr("New input:"), QLineEdit::Normal,
-                                         "", &ok);
-    if (ok && !text.isEmpty())
+    if(transducers.size() == 0)
     {
-        fsm_input.str(text.toStdString());
-        fsm_input.clear();
-        input->setText(text);
-        QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Transducer"), "Reset transducer?",
-                                      QMessageBox::Yes|QMessageBox::No);
+        QMessageBox msgBox;
+        msgBox.setText(tr("First add some transducer"));
+        msgBox.exec();
+    }
+    else
+    {
+        bool ok;
+        QString text = QInputDialog::getText(this, tr("Type new input"),
+                                             tr("New input for first transducer in pipe:"), QLineEdit::Normal,
+                                             "", &ok);
+        if (ok && !text.isEmpty())
+        {
+            fsm_input.str(text.toStdString());
+            fsm_input.clear();
+            input->setText(text);
+            QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Transducer"), "Reset transducers?",
+                                          QMessageBox::Yes|QMessageBox::No);
 
-        if (reply == QMessageBox::Yes)
-            resetFSM();
+            if (reply == QMessageBox::Yes)
+                resetFSM();
+        }
     }
 }
 
@@ -158,15 +135,16 @@ void ApplicationWindow::resetAll()
 }
 void ApplicationWindow::resetFSM()
 {
-    widget->reset();
-    readChars->setText("");
+    //for(auto x: )//TODO
+    /*widget->reset();
+    readChars->setText("");*/
 }
 void ApplicationWindow::resetInput()
 {
-    fsm_input.str((readChars->text() + input->text()).toStdString());
+    /*fsm_input.str((readChars->text() + input->text()).toStdString());//TODO
     fsm_input.clear();
     input->setText(readChars->text() + input->text());
-    readChars->setText("");
+    readChars->setText("");*/
 }
 
 void ApplicationWindow::showCredits()
@@ -183,6 +161,19 @@ void ApplicationWindow::notImplemented()
     msgBox.exec();
 }
 
+QWidget* ApplicationWindow::createLabel(const QString &text, QWidget* w2)
+{
+    QHBoxLayout* readLayout = new QHBoxLayout;
+    QWidget* readWidget = new QWidget;
+
+    QLabel *label = new QLabel(text);
+    label->setFrameStyle(QFrame::Box | QFrame::Raised);
+
+    readLayout->addWidget(label);
+    readLayout->addWidget(w2);
+    readWidget->setLayout(readLayout);
+    return readWidget;
+}
 
 void ApplicationWindow::keyPressEvent(QKeyEvent *event)
 {
@@ -197,25 +188,28 @@ void ApplicationWindow::keyPressEvent(QKeyEvent *event)
         editInput();
         break;
     case Qt::Key_Plus:
-        widget->zoomIn();
+        zoomInCurrent();
         break;
     case Qt::Key_Minus:
-        widget->zoomOut();
+        zoomOutCurrent();
         break;
     case Qt::Key_R:
         resetAll();
         break;
     case Qt::Key_S:
-        widget->offsetNodes(-1, 0);
+        offsetCurrent(-1, 0);
         break;
     case Qt::Key_W:
-        widget->offsetNodes(1, 0);
+        offsetCurrent(1, 0);
         break;
     case Qt::Key_D:
-        widget->offsetNodes(0, -1);
+        offsetCurrent(0, -1);
         break;
     case Qt::Key_A:
-        widget->offsetNodes(0, 1);
+        offsetCurrent(0, 1);
+        break;
+    case Qt::Key_T:
+        addToPipe();
         break;
     default:
         QMainWindow::keyPressEvent(event);
@@ -224,6 +218,64 @@ void ApplicationWindow::keyPressEvent(QKeyEvent *event)
 
 ApplicationWindow::~ApplicationWindow()
 {
-    delete widget;
     delete menuBar;
+}
+
+void ApplicationWindow::zoomInCurrent()
+{
+    transducers[tabWidget->currentIndex()]->widget->zoomIn();
+}
+
+void ApplicationWindow::zoomOutCurrent()
+{
+    transducers[tabWidget->currentIndex()]->widget->zoomOut();
+}
+
+void ApplicationWindow::offsetCurrent(int y, int x)
+{
+    transducers[tabWidget->currentIndex()]->widget->offsetNodes(y, x);
+}
+
+
+void ApplicationWindow::organizeOnLineCurrent()
+{
+    transducers[tabWidget->currentIndex()]->widget->organizeOnLine();
+}
+
+void ApplicationWindow::run()
+{
+    while(!fsm_input.eof())
+        nextStep();
+}
+
+void ApplicationWindow::nextStep()
+{
+    if(fsm_input.peek() == 0)
+    {
+        fsm_input.ignore();
+        input->setText(input->text().mid(1));
+    }
+    if(!fsm_input.eof())
+    {
+        input->setText(input->text().mid(1));
+        transducers[0]->nextStep(fsm_input.get());
+        //output->setText(QString::fromStdString(widget->get_output()));//TODO
+    }
+    else
+    {
+        QMessageBox msgBox;
+        msgBox.setText(tr("Input is empty"));
+        msgBox.exec();
+    }
+
+}
+
+void ApplicationWindow::organizeOnGridCurrent()
+{
+    transducers[tabWidget->currentIndex()]->widget->organizeOnGrid();
+}
+
+void ApplicationWindow::organizeOnRegularPolygonCurrent()
+{
+    transducers[tabWidget->currentIndex()]->widget->organizeOnRegularPolygon();
 }

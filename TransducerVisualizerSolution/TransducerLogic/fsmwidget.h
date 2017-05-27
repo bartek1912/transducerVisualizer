@@ -16,6 +16,7 @@ public:
     void scaleView(qreal);
     void offsetNodes(int, int);
     void reset() override;
+    void editInput(std::string);
 protected:
     void loadTransducer(std::string);
     void updateTransducerView();
@@ -24,10 +25,12 @@ protected:
 public slots:
     void zoomIn();
     void zoomOut();
-    void nextStep(char act);
+    virtual void nextStep(char act);
     void organizeOnLine();
     void organizeOnGrid();
     void organizeOnRegularPolygon();
+    void convertToMoore();
+    void convertToMealy();
 };
 
 #endif // FSMWIDGET_H
