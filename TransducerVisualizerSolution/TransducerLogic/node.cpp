@@ -4,7 +4,6 @@
 #include <QPainter>
 #include <QStyleOption>
 #include <assert.h>
-const int NODE_WIDTH = 40, NODE_HEIGHT = 40;
 
 Node::Node(FSMWidget *graphWidget, std::string name):
     fsm(graphWidget),
@@ -89,7 +88,7 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
         refresh();
         //widget->itemMoved();
         break;
-    default:
+    _:
         break;
     };
 

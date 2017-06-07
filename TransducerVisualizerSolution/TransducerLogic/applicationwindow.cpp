@@ -37,16 +37,16 @@ ApplicationWindow::ApplicationWindow(QWidget *parent)
                               SIGNAL(triggered()), this, SLOT(resetInput()));
     connect(transducerMenu->addAction(tr("Reset all")),
             SIGNAL(triggered()), this, SLOT(resetAll()));
-    /*connect(transducerMenu->addAction(tr("Convert to moore'a")),//TODO
-            SIGNAL(triggered()), widget, SLOT(convertToMoore()));
+    connect(transducerMenu->addAction(tr("Convert to moore'a")),
+            SIGNAL(triggered()), this, SLOT(convertToMoore()));
     connect(transducerMenu->addAction(tr("Convert to mealy")),
-            SIGNAL(triggered()), widget, SLOT(convertToMealy()));*/
+            SIGNAL(triggered()), this, SLOT(convertToMealy()));
 
     auto pipeMenu = new QMenu(QObject::tr("Pipe"));
     connect(pipeMenu->addAction(tr("Add transducer")),
                               SIGNAL(triggered()), this, SLOT(addToPipe()));
     connect(pipeMenu->addAction(tr("Remove transducer")),
-                              SIGNAL(triggered()), this, SLOT(notImplemented()));
+                              SIGNAL(triggered()), this, SLOT(removeTransducer()));
     connect(pipeMenu->addAction(tr("Edit input")),
             SIGNAL(triggered()), this, SLOT(editInput()));
 
@@ -80,6 +80,28 @@ ApplicationWindow::ApplicationWindow(QWidget *parent)
     window->setLayout(windowLayout);
     this->setCentralWidget(window);
 }\
+
+void ApplicationWindow::removeTransducer()
+{
+    int id = tabWidget->currentIndex();
+    if(id < int(transducers.size()))
+    {
+        QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Transducer"), QString::fromStdString("Do you want erase transducer named " + transducers[id]->getName() + " ?"),
+                                      QMessageBox::Yes|QMessageBox::No);
+        if (reply == QMessageBox::Yes)
+        {
+            int id = tabWidget->currentIndex();
+            transducers.erase(transducers.begin() + id);
+            tabWidget->removeTab(id);
+        }
+    }
+    else
+    {
+        QMessageBox msgBox;
+        msgBox.setText(tr("No transducer selected"));
+        msgBox.exec();
+    }
+}
 
 void ApplicationWindow::addToPipe()
 {
@@ -225,6 +247,8 @@ void ApplicationWindow::keyPressEvent(QKeyEvent *event)
 ApplicationWindow::~ApplicationWindow()
 {
     delete menuBar;
+    for(auto x: transducers)
+        delete x;
 }
 
 void ApplicationWindow::zoomInCurrent()
@@ -269,7 +293,7 @@ void ApplicationWindow::nextStep()
     }
     else
     {
-        if(tabWidget->currentIndex() + 1 < transducers.size())
+        if(tabWidget->currentIndex() + 1 < int(transducers.size()))
         {
             fsm_input.str(transducers[tabWidget->currentIndex()]->getOutputLabel()->text().toStdString());
             fsm_input.clear();
@@ -293,4 +317,24 @@ void ApplicationWindow::organizeOnGridCurrent()
 void ApplicationWindow::organizeOnRegularPolygonCurrent()
 {
     transducers[tabWidget->currentIndex()]->widget->organizeOnRegularPolygon();
+}
+
+void ApplicationWindow::convertToMealy()
+{
+    if(transducers[tabWidget->currentIndex()]->widget->isMealy())
+    {
+        QMessageBox msgBox;
+        msgBox.setText(tr("It is Mealy's transducer"));
+        msgBox.exec();
+    }
+}
+
+void ApplicationWindow::convertToMoore()
+{
+    if(transducers[tabWidget->currentIndex()]->widget->isMoore())
+    {
+        QMessageBox msgBox;
+        msgBox.setText(tr("It is Moore's transducer"));
+        msgBox.exec();
+    }
 }

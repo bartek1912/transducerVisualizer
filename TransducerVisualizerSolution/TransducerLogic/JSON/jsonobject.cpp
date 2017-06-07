@@ -34,6 +34,11 @@ Object::Object(std::istream& in)
     assert(s[0] == '}' && "Not valid out from json object Bparsing");
 }
 
+bool Object::find(const std::string& x)
+{
+    return m.find(x) != m.end();
+}
+
 Element& Object::operator[](const std::string& x)
 {
     if(m.find(x) == m.end())

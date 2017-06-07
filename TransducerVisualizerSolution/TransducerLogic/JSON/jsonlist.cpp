@@ -28,16 +28,22 @@ List::List(std::istream& in)
     in>>s;
     assert(s[0] == ']');
 }
+bool List::find(const std::string& x)
+{
+    int i = stoi(x);
+    return i < int(elems.size()) && i >= 0;
+}
+
 Element& List::operator[](const std::string& x)
 {
     int i = stoi(x);
-    assert(i < elems.size() && i >= 0 && "Not valid element number in json list!");
+    assert(i < int(elems.size()) && i >= 0 && "Not valid element number in json list!");
     return *elems[i];
 }
 const Element& List::operator[](const std::string& x) const
 {
     int i = stoi(x);
-    assert(i < elems.size() && i >= 0 && "Not valid element number in json list!");
+    assert(i < int(elems.size()) && i >= 0 && "Not valid element number in json list!");
     return *elems[i];
 }
 
@@ -55,7 +61,7 @@ List::operator std::string() const
 std::vector<std::string> List::identifiers() const
 {
     std::vector<std::string> res;
-    for(int i = 0; i < elems.size(); i++)
+    for(unsigned i = 0; i < elems.size(); i++)
         res.push_back(std::to_string(i));
     return res;
 }

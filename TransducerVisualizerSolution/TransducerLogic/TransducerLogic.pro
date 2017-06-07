@@ -41,7 +41,10 @@ SOURCES += FSM/state.cpp \
     mainwindow.cpp \
     FSM/discretetransitionfunction.cpp \
     Transducer/outfunction.cpp \
-    transducercontrolwidget.cpp
+    transducercontrolwidget.cpp \
+    FSM/discretetransitionfunctionwithstack.cpp \
+    stackwidget.cpp \
+    verticallabel.cpp
 
 HEADERS += FSM/transducerlogic_global.h\
         FSM/fsm.h \
@@ -63,7 +66,10 @@ HEADERS += FSM/transducerlogic_global.h\
     edge.h \
     applicationwindow.h \
     mainwindow.h \
-    transducercontrolwidget.h
+    transducercontrolwidget.h \
+    FSM/discretetransitionfunctionwithstack.h \
+    stackwidget.h \
+    verticallabel.h
 
 unix {
     target.path = /usr/lib

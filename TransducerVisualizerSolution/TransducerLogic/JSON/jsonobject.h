@@ -11,6 +11,7 @@ namespace JSON
 struct Object: public Element
 {
     Object(std::istream&);
+    virtual bool find(const std::string&) override;
     virtual Element& operator[](const std::string& x) override;
     virtual const Element& operator[](const std::string& x) const override;
     virtual operator std::string() const override;

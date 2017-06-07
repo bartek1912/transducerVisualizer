@@ -3,6 +3,7 @@
 #include <QWidget>
 #include <QLabel>
 #include "fsmwidget.h"
+#include "stackwidget.h"
 
 class TransducerControlWidget: public QWidget
 {
@@ -18,9 +19,10 @@ public:
     void nextStep(char c);
     QLabel* getOutputLabel();
 private:
-    QLabel *readChars, *output;
+    QLabel *readChars, *output, *transducerDescription;
     QLabel* createLabel(const QString &text);
     QWidget* centralWidget;
+    StackWidget* stackWidget;
     std::string name;
 };
 

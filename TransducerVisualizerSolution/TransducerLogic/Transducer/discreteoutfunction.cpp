@@ -1,7 +1,7 @@
 #include "discreteoutfunction.h"
 #include <iostream>
 
-DiscreteOutFunction::DiscreteOutFunction():default_out("")
+DiscreteOutFunction::DiscreteOutFunction():__out("")
 {
 
 }
@@ -26,9 +26,9 @@ void DiscreteOutFunction::operator()(std::string state, char c)
     }
 }
 
-void DiscreteOutFunction::setAsDefault(std::string def)
+void DiscreteOutFunction::setAs_(std::string def)
 {
-    default_out = def;
+    __out = def;
 }
 
 void DiscreteOutFunction::addOutput(std::pair<std::string, char> p, std::string o)

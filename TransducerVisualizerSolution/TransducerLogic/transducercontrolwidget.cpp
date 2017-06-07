@@ -1,4 +1,5 @@
 #include "transducercontrolwidget.h"
+#include "stackwidget.h"
 #include <QMessageBox>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -8,6 +9,7 @@ TransducerControlWidget::TransducerControlWidget(std::string name, std::string f
     ,readChars{createLabel("")}
     ,output{createLabel("")}
     ,centralWidget{new QWidget}
+    ,stackWidget{new StackWidget}
     ,name(name)
 {
 
@@ -25,7 +27,10 @@ TransducerControlWidget::TransducerControlWidget(std::string name, std::string f
     outputLayout->addWidget(output);
     outputWidget->setLayout(outputLayout);
 
+    transducerDescription = createLabel(widget->getDescription());
     mainLayout->addWidget(widget);
+    mainLayout->addWidget(transducerDescription);
+    mainLayout->addWidget(stackWidget);
     mainLayout->addWidget(readWidget);
     mainLayout->addWidget(outputWidget);
     centralWidget->setLayout(mainLayout);
@@ -61,6 +66,9 @@ void TransducerControlWidget::nextStep(char c)
     readChars->setText(readChars->text() + c);
     widget->nextStep(c);
     output->setText(QString::fromStdString(widget->get_output()));
+    auto stack = widget->getStack();
+    stackWidget->setContent(stack.size() > 12 ? "|..." + stack.substr(stack.size() - 9) : "|" + stack);
+
 }
 QLabel* TransducerControlWidget::getOutputLabel()
 {

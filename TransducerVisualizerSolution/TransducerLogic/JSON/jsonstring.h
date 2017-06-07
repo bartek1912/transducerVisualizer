@@ -8,6 +8,7 @@ struct String: public Element
 {
     String(const std::string& v);
     String(std::istream&);
+    virtual bool find(const std::string&) override;
     virtual Element& operator[](const std::string& x) override;
     virtual const Element& operator[](const std::string& x) const override;
     virtual operator std::string() const override;

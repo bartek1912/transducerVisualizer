@@ -5,7 +5,8 @@
 #include "transitionfunction.h"
 #include "states.h"
 #include "state.h"
-
+typedef char Label;
+typedef std::string State_desc;
 class FSM
 {
 protected:
@@ -25,7 +26,7 @@ public:
     }
     void process_dash(std::string s);
     std::vector<std::string> states_description() const;
-    std::vector<std::pair<char, std::pair<std::string, std::string>>> edge_description() const;
+    std::vector<std::pair<Label, std::pair<State_desc, State_desc>>> edge_description() const;
 };
 
 

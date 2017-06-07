@@ -29,6 +29,11 @@ String::String(std::istream& f)
 String::String(const std::string& v):val(v){}
 
 
+bool String::find(const std::string&)
+{
+    return true;
+}
+
 Element& String::operator[](const std::string& x)
 {
     return *this;

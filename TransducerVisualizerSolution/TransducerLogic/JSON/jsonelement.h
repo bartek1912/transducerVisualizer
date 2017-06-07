@@ -9,6 +9,7 @@ namespace JSON
 struct Element
 {
     Element();
+    virtual bool find(const std::string& x) = 0;
     virtual Element& operator[](const std::string& x) = 0;//object handle all containing objects on their own
     virtual const Element& operator[](const std::string& x) const = 0;//no need for shared_ptr
     virtual operator std::string() const = 0;

@@ -39,6 +39,9 @@ public slots:
     void run();
     void nextStep();
     void organizeOnRegularPolygonCurrent();
+    void convertToMealy();
+    void convertToMoore();
+    void removeTransducer();
 };
 
 #endif // APPLICATIONWINDOW_H

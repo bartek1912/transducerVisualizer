@@ -60,15 +60,30 @@ void FSMWidget::loadTransducer(std::string path)
         nodes[s] = node;
         scene->addItem(node);
     }
-    for(const  auto& x: edge_description())
+#define FROM second.first
+#define TO second.second
+    for(const auto& x: edge_description())
     {
-        assert(nodes.find(x.second.first) != nodes.end()
-                && nodes.find(x.second.second) != nodes.end());
-        scene->addItem(new Edge(nodes[x.second.first],
-                            nodes[x.second.second], x.first));
+        if(!(nodes.find(x.FROM) != nodes.end()
+                && nodes.find(x.TO) != nodes.end()))
+        {
+            std::cerr<<"Known nodes:";
+            for(auto x: nodes)
+                std::cerr<<"'"<<x.first<<"', ";
+            std::cerr<<"\n";
+            if(nodes.find(x.FROM) == nodes.end())
+                std::cerr<<"Can't find node named '"<<x.FROM<<"'\n";
+            if(nodes.find(x.TO) == nodes.end())
+                std::cerr<<"Can't find node named "<<x.TO<<"\n";
+            exit(1);
+        }
+        scene->addItem(new Edge(nodes[x.FROM],
+                            nodes[x.TO], x.first));
     }
     updateTransducerView();
 }
+#undef FROM
+#undef TO
 
 FSMWidget::~FSMWidget()
 {
@@ -179,4 +194,14 @@ void FSMWidget::convertToMealy()
     QMessageBox msgBox;
     msgBox.setText(tr("Not implemented"));
     msgBox.exec();
+}
+
+QString FSMWidget::getDescription()
+{
+    return (isMealy() ? "Mealy's Transducer" : "Moore's Transducer") + QString(" ") + getName();
+}
+
+std::string FSMWidget::getStack()
+{
+    return actual.getStack();
 }

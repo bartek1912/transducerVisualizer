@@ -8,6 +8,7 @@ struct Edge;
 struct Node : public QGraphicsItem
 {
     enum { Type = UserType + 1 };
+    enum { NODE_WIDTH = 40, NODE_HEIGHT = 40};
     int type() const override { return Type; }
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;

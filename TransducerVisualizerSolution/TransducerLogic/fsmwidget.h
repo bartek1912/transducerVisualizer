@@ -11,13 +11,16 @@ class FSMWidget: public QGraphicsView, public Transducer
 {
     Q_OBJECT
     enum {WIDTH = 700, HEIGHT = 400, MARGIN = 10};
+    std::string name;
 public:
-    FSMWidget(std::string = "nawiasy.json", QWidget *parent = 0);//TODO singleton pattern
+    FSMWidget(std::string = "nawiasy.json", QWidget *parent = 0);
     virtual ~FSMWidget();
     void scaleView(qreal);
     void offsetNodes(int, int);
     void reset() override;
     void editInput(std::string);
+    QString getDescription();
+    std::string getStack();
 protected:
     void loadTransducer(std::string);
     void updateTransducerView();

@@ -37,7 +37,7 @@ std::vector<std::pair<char, std::string>> DiscreteTransitionFunction::possibilit
     //auto end = transition.upper_bound(std::make_pair(s, 255));
     //for(auto beg = transition.upper_bound(std::make_pair(s, 0)); beg != end; beg++)
     //    res.push_back(beg->second);
-    for(char c = 1; c != 0; c++)//TODO change
+    for(char c = 1; c != 0; c++)//TODO change - it should go through all chars...
     {
         auto p = std::make_pair(s,c);
         if(transition.find(p) != transition.end()
