@@ -8,22 +8,23 @@ DiscreteOutFunction::DiscreteOutFunction():__out("")
 
 void DiscreteOutFunction::operator()(std::string state, char c)
 {
+    std::string res = "";
     if(output.find(std::make_pair(state, c)) != output.end())
     {
+        res = output[std::make_pair(state, c)];
         std::cerr<<"For state "<<state<<" and char "<<c<<" out: "
-                <<output[std::make_pair(state, c)]<<"\n";
-        for(char cX: output[std::make_pair(state, c)])
-            out.push_back(cX);
+                <<res<<"\n";
     }
     else if(output.find(std::make_pair(state, '_')) != output.end())
-    {
-        std::string res = output[std::make_pair(state, '_')];
-        if(res == "identity")
-            out.push_back(c);
-        else
-            for(char c: res)
+        res = output[std::make_pair(state, '_')];
+    if(res == "identity" || res == "$")
+        out.push_back(c);
+    else if(res != "none")
+        for(char cX: res)
+            if(cX == '$')
                 out.push_back(c);
-    }
+            else
+                out.push_back(cX);
 }
 
 void DiscreteOutFunction::setAs_(std::string def)

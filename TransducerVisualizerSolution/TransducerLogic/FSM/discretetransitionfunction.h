@@ -1,10 +1,10 @@
 #ifndef DISCRETETRANSITIONFUNCTION_H
 #define DISCRETETRANSITIONFUNCTION_H
-//TODO nie korzystać z currentTab tylko z nowej zmiennej
+//TODO nie korzystać z currentIndex jako tab tylko z nowej zmiennej
 //TODO stos/niedeterministyczny
-//TODO nieskończone słowa
+//TODO nieskończone słowa - nie da się zrealizować
 //TODO space sensitive (brak spacji po przecinku, spacja przed)
-//TODO tylko 12 symboli ze stosu z góry
+//TODO konwersja nie jest zrobiona
 //TODO praca: co to transducer, dlaczego takie technologie,
 //przykłady, testy, podsumowanie [ zastosowania, jakie kierunki rozwoju, co nie zostało zrobione] + cytaty(min 7)
 //TODO  przetestować usuwanie transducer'a w którym obecnie jest input (może reset?)

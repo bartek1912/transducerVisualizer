@@ -20,6 +20,7 @@ private:
     std::istringstream fsm_input;
     std::vector<TransducerControlWidget*> transducers;
     std::string initialInputText;
+    int currentFSM;
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     QWidget* createLabel(const QString &text, QWidget* text2);
@@ -28,7 +29,7 @@ public slots:
     void showCredits();
     void notImplemented();
     void resetFSM();
-    void resetAll();
+    void resetAll(bool = true);
     void resetInput();
     void addToPipe();
     void zoomInCurrent();

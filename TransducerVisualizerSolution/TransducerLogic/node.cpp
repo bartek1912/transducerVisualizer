@@ -50,7 +50,7 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     QRectF textRect = boundingRect();
     QFont font = painter->font();
     font.setBold(true);
-    font.setPointSize(14);
+    font.setPointSize(11);
     painter->setFont(font);
     if(marked || prev_marked)
         painter->setPen(Qt::white);
@@ -88,7 +88,7 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
         refresh();
         //widget->itemMoved();
         break;
-    _:
+    default:
         break;
     };
 

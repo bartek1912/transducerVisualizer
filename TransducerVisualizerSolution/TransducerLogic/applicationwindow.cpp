@@ -16,19 +16,21 @@ ApplicationWindow::ApplicationWindow(QWidget *parent)
     ,input{new QLabel}
     ,output{new QLabel}
 {
-    auto fileMenu = new QMenu(QObject::tr("File"));
+    /*auto fileMenu = new QMenu(QObject::tr("File"));
     connect(fileMenu->addAction(QObject::tr("Open")),
                                 SIGNAL(triggered()), this, SLOT(notImplemented()));
     connect(fileMenu->addAction(QObject::tr("Save")),
                                 SIGNAL(triggered()), this, SLOT(notImplemented()));
     auto exitAction = fileMenu->addAction(QObject::tr("Exit"));
-    connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
+    connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));*/
 
     auto transducerMenu = new QMenu(QObject::tr("Transducer"));
-    connect(transducerMenu->addAction(tr("Run <F5>")),
-                              SIGNAL(triggered()), this, SLOT(run()));
-    connect(transducerMenu->addAction(tr("Step forward <F10>")),
-                              SIGNAL(triggered()), this, SLOT(nextStep()));
+    connect(transducerMenu->addAction(tr("Arrange nodes on line")),
+            SIGNAL(triggered()), this, SLOT(organizeOnLineCurrent()));
+    connect(transducerMenu->addAction(tr("Arrange nodes on grid")),
+            SIGNAL(triggered()), this, SLOT(organizeOnGridCurrent()));
+    connect(transducerMenu->addAction(tr("Arrange nodes on regular polygon")),
+            SIGNAL(triggered()), this, SLOT(organizeOnRegularPolygonCurrent()));
     connect(transducerMenu->addAction(tr("Clear output")),
                               SIGNAL(triggered()), this, SLOT(notImplemented()));
     connect(transducerMenu->addAction(tr("Reset FSM")),
@@ -37,12 +39,16 @@ ApplicationWindow::ApplicationWindow(QWidget *parent)
                               SIGNAL(triggered()), this, SLOT(resetInput()));
     connect(transducerMenu->addAction(tr("Reset all")),
             SIGNAL(triggered()), this, SLOT(resetAll()));
-    connect(transducerMenu->addAction(tr("Convert to moore'a")),
+    /*connect(transducerMenu->addAction(tr("Convert to moore'a")), //TODO Not implemented
             SIGNAL(triggered()), this, SLOT(convertToMoore()));
     connect(transducerMenu->addAction(tr("Convert to mealy")),
-            SIGNAL(triggered()), this, SLOT(convertToMealy()));
+            SIGNAL(triggered()), this, SLOT(convertToMealy()));*/
 
     auto pipeMenu = new QMenu(QObject::tr("Pipe"));
+    connect(pipeMenu->addAction(tr("Run <F5>")),
+                              SIGNAL(triggered()), this, SLOT(run()));
+    connect(pipeMenu->addAction(tr("Step forward <F10>")),
+                              SIGNAL(triggered()), this, SLOT(nextStep()));
     connect(pipeMenu->addAction(tr("Add transducer")),
                               SIGNAL(triggered()), this, SLOT(addToPipe()));
     connect(pipeMenu->addAction(tr("Remove transducer")),
@@ -55,17 +61,11 @@ ApplicationWindow::ApplicationWindow(QWidget *parent)
             SIGNAL(triggered()), this, SLOT(zoomInCurrent()));
     connect(viewMenu->addAction(tr("Zoom Out")),
             SIGNAL(triggered()), this, SLOT(zoomOutCurrent()));
-    connect(viewMenu->addAction(tr("Arrange nodes on line")),
-            SIGNAL(triggered()), this, SLOT(organizeOnLineCurrent()));
-    connect(viewMenu->addAction(tr("Arrange nodes on grid")),
-            SIGNAL(triggered()), this, SLOT(organizeOnGridCurrent()));
-    connect(viewMenu->addAction(tr("Arrange nodes on regular polygon")),
-            SIGNAL(triggered()), this, SLOT(organizeOnRegularPolygonCurrent()));
     auto helpMenu = new QMenu(QObject::tr("Help"));
     connect(helpMenu->addAction(tr("Credits")),
             SIGNAL(triggered()), this, SLOT(showCredits()));
 
-    menuBar->addMenu(fileMenu);
+    //menuBar->addMenu(fileMenu);
     menuBar->addMenu(pipeMenu);
     menuBar->addMenu(transducerMenu);
     menuBar->addMenu(viewMenu);
@@ -79,6 +79,7 @@ ApplicationWindow::ApplicationWindow(QWidget *parent)
     windowLayout->addWidget(createLabel("Pipe Output:", output));
     window->setLayout(windowLayout);
     this->setCentralWidget(window);
+    resetAll(false);
 }\
 
 void ApplicationWindow::removeTransducer()
@@ -90,7 +91,6 @@ void ApplicationWindow::removeTransducer()
                                       QMessageBox::Yes|QMessageBox::No);
         if (reply == QMessageBox::Yes)
         {
-            int id = tabWidget->currentIndex();
             transducers.erase(transducers.begin() + id);
             tabWidget->removeTab(id);
         }
@@ -151,12 +151,16 @@ void ApplicationWindow::editInput()
     }
 }
 
-void ApplicationWindow::resetAll()
+void ApplicationWindow::resetAll(bool ask)
 {
-    QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Transducer"), "Are you sure to reset all?",
+    bool res = !ask;
+    if(ask)
+    {
+        QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Transducer"), "Are you sure to reset all?",
                                 QMessageBox::Yes|QMessageBox::No);
-
-  if (reply == QMessageBox::Yes)
+        res = (reply == QMessageBox::Yes);
+    }
+  if(res)
   {
         resetInput();
         resetFSM();
@@ -164,12 +168,16 @@ void ApplicationWindow::resetAll()
 }
 void ApplicationWindow::resetFSM()
 {
+    currentFSM = 0;
+    tabWidget->setCurrentIndex(currentFSM);
     for(auto x: transducers)
         x->resetFSM();
+
 }
-void ApplicationWindow::resetInput()
+void ApplicationWindow::resetInput()//TODO reset nie działa - nie czyści wejść innych transducerów - czy ta funkcja ma sens?
 {
     tabWidget->setCurrentIndex(0);
+    currentFSM = 0;
     fsm_input.str(initialInputText);
     fsm_input.clear();
     input->setText(QString::fromStdString(initialInputText));
@@ -288,16 +296,17 @@ void ApplicationWindow::nextStep()
     if(!fsm_input.eof())
     {
         input->setText(input->text().mid(1));
-        transducers[tabWidget->currentIndex()]->nextStep(fsm_input.get());
+        transducers[currentFSM]->nextStep(fsm_input.get());
         output->setText(transducers.back()->getOutputLabel()->text());
     }
     else
     {
-        if(tabWidget->currentIndex() + 1 < int(transducers.size()))
+        if(currentFSM + 1 < int(transducers.size()))
         {
-            fsm_input.str(transducers[tabWidget->currentIndex()]->getOutputLabel()->text().toStdString());
+            fsm_input.str(transducers[currentFSM]->getOutputLabel()->text().toStdString());
             fsm_input.clear();
-            tabWidget->setCurrentIndex(tabWidget->currentIndex()+1);
+            currentFSM++;
+            tabWidget->setCurrentIndex(currentFSM);
         }
         else
         {
@@ -311,17 +320,17 @@ void ApplicationWindow::nextStep()
 
 void ApplicationWindow::organizeOnGridCurrent()
 {
-    transducers[tabWidget->currentIndex()]->widget->organizeOnGrid();
+    transducers[currentFSM]->widget->organizeOnGrid();
 }
 
 void ApplicationWindow::organizeOnRegularPolygonCurrent()
 {
-    transducers[tabWidget->currentIndex()]->widget->organizeOnRegularPolygon();
+    transducers[currentFSM]->widget->organizeOnRegularPolygon();
 }
 
 void ApplicationWindow::convertToMealy()
 {
-    if(transducers[tabWidget->currentIndex()]->widget->isMealy())
+    if(transducers[currentFSM]->widget->isMealy())
     {
         QMessageBox msgBox;
         msgBox.setText(tr("It is Mealy's transducer"));
@@ -331,7 +340,7 @@ void ApplicationWindow::convertToMealy()
 
 void ApplicationWindow::convertToMoore()
 {
-    if(transducers[tabWidget->currentIndex()]->widget->isMoore())
+    if(transducers[currentFSM]->widget->isMoore())
     {
         QMessageBox msgBox;
         msgBox.setText(tr("It is Moore's transducer"));

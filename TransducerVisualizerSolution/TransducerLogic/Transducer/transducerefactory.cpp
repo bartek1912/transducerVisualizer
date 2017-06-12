@@ -15,7 +15,8 @@ Transducer TransducerFactory::produceTransducer(std::ifstream& in)
                      std::istreambuf_iterator<char>());
 
     QString qstr = QString::fromStdString(str);
-    qstr.replace(QRegExp("([\\{\\}\\[\\]])"), " \\1");
+    qstr.replace(QRegExp("([{:,])"), "\\1 ");
+    qstr.replace(QRegExp("([}])"), " \\1");
     std::istringstream iss;
     iss.str(qstr.toStdString());
     JSON::Object tr(iss);
