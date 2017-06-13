@@ -18,6 +18,7 @@ class DiscreteTransitionFunction : public TransitionFunction
     std::map<std::pair<std::string, char>, std::string> transition;
 public:
     DiscreteTransitionFunction();
+    virtual bool hasEpsilonMove(std::string state, char stack) const override;
     virtual State operator()(const State& s, char c) override;
     std::vector<std::pair<char, std::string>> possibilites(std::string s) override;
     void setTransition(std::pair<std::string, char>, std::string);

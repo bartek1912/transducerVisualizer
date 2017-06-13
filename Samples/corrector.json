@@ -1,0 +1,42 @@
+{
+	name: un2bin,
+	states: [ NULL, n, na, nap, nape, napew, napewn, ni, nie, niel, niela, nielad ],
+	initial_state: NULL,
+	type: Mealy,
+	delta: {
+			NULL: {
+					n: n
+				}
+			n: {
+				a: na,
+				i: ni,
+				default: NULL
+			   },
+			na: { p: nap, default: NULL },
+			nap: { e: nape, default: NULL },
+			nape: { w: napew, default: NULL },
+			napew: { n: napewn, default: NULL },
+			napewn: { n: n, a: na, default: NULL },
+			ni: { e: nie, default: NULL },
+			nie: { l: niel, default: NULL },
+			niel: { a: niela, default: NULL },
+			niela: { d: nielad, default: NULL },
+			nielad: { n: n, default: NULL },
+		},
+	sigma: {
+		NULL:{n:none,default:identity},
+		n: { i:none, a: none, default: n$ },
+		na: { p: none, default: na$ },
+		nap: { e: none, default: na$ },
+		nape: { w: none, default: na$ },
+		napew: { n: none, default: na$ },
+		napewn: { o: "na pewno", default: na$ },
+		ni: { e: none, default: ni$ },
+		nie: { l: none, default: nie$ },
+		niel: { a: none, default: niel$ },
+		niela: { d: none, default: niela$ },
+		nielad: { a: "nie lada", default: nielad$ }		
+		
+		
+		}
+}

@@ -6,7 +6,8 @@
 struct OutFunction
 {
     std::string result();
-    virtual void operator()(std::string s, char c) = 0;
+    virtual void operator()(std::string s, char c, char stack) = 0;
+    virtual bool hasEpsilonMove(std::string state, char stack) const = 0;
     void reset();
 protected:
     std::string out;

@@ -6,7 +6,12 @@ DiscreteOutFunction::DiscreteOutFunction():__out("")
 
 }
 
-void DiscreteOutFunction::operator()(std::string state, char c)
+bool DiscreteOutFunction::hasEpsilonMove(std::string state, char ) const
+{
+    return output.find(std::make_pair(state, '_')) != output.end() || output.find(std::make_pair(state, '#')) != output.end();
+}
+
+void DiscreteOutFunction::operator()(std::string state, char c, char )
 {
     std::string res = "";
     if(output.find(std::make_pair(state, c)) != output.end())

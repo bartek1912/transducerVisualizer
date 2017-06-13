@@ -1,0 +1,17 @@
+{
+	name: rewrite,
+	states: [ 0 ],
+	initial_state: 0,
+	type: Mealy,
+	delta: {
+			0: {
+				default: 0
+			   }
+		},
+	sigma: {
+			0:
+			{
+				default: identity
+			}
+		}
+}

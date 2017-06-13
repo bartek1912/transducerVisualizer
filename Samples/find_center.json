@@ -1,0 +1,23 @@
+{
+	name: reverse,
+	states: [ COUNT, WAIT, REWRITE ],
+	initial_state: COUNT,
+	type: Mealy,
+	hasStack: true,
+	delta: {
+			COUNT: {
+				@: { default: [ WAIT,  _]  },
+				default: { default: [ COUNT, ^0 ] }
+			   },
+			WAIT: {
+				default: { empty: [ REWRITE, _], default: [ WAIT, v] }
+			   },
+			REWRITE: {
+				default: { default: [ REWRITE, _ ] }
+			  }
+		},
+	sigma: {
+			WAIT: { default: { empty: @$, default: $} },
+			REWRITE: { default: {default: $} }
+		}
+}

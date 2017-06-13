@@ -1,0 +1,37 @@
+{
+	name: up_nawiasy,
+	states: [ None, A, AB, ABC, ABCD ],
+	initial_state: A,
+	type: Mealy,
+	delta: {
+			None: {
+				A: A,
+				default: None
+			   },
+			A: {
+				B: AB,
+				A: A,
+				default: None
+			   },
+			AB: {
+				A: A,
+				C: ABC,
+				default: None
+			   }
+			ABC: {
+				A: A,
+				D: ABCD,
+				default: None
+			   }
+			ABCD: {
+				A: A,
+				default: None
+			   }
+		},
+	sigma: {
+			ABCD: 
+			{
+				default: X
+			}
+		}
+}

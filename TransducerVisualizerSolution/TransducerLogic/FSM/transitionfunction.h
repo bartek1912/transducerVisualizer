@@ -8,6 +8,7 @@ class TransitionFunction
 //    void operator = (const TransitionFunction& f);
 public:
     TransitionFunction();
+    virtual bool hasEpsilonMove(std::string state, char stack) const = 0;
     virtual State operator()(const State& s, char c) = 0;
     virtual std::vector<std::pair<char, std::string>> possibilites(std::string) = 0;
 };

@@ -1,0 +1,14 @@
+{
+	name: rewrite,
+	states: [ 0 ],
+	initial_state: 0,
+	type: Moore,
+	delta: {
+			0: {
+				default: 0
+			   }
+		},
+	sigma: {
+			0: identity
+		}
+}

@@ -1,0 +1,24 @@
+{
+	name: reverse,
+	states: [ 0, 1, X, R ],
+	initial_state: 0,
+	type: Mealy,
+	hasStack: true,
+	delta: {
+			0: {
+				@: { default: [ X,  _]  },
+				default: { default: [ 1, ^0 ] }
+			   },
+			1: {
+				@: { default: [ X,  _]  },
+				default: { default: [ 0, _ ] }
+			   },
+			X: {
+				epsilon: {	empty: [ R, _], default: [ X, v ] }
+			  }
+		},
+	sigma: {
+			0: { default: {default: $} },
+			X: { default: {default: %} }
+		}
+}

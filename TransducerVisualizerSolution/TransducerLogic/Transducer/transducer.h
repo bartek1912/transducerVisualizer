@@ -19,6 +19,7 @@ public:
     virtual void reset() override;
     bool isMealy() const;
     bool isMoore() const;
+    bool hasEpsilonMove() const;
     void setType(Type t);
     friend std::ostream& operator << (std::ostream& o, const Transducer& t)
     {

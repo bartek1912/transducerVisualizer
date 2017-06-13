@@ -1,0 +1,27 @@
+{
+	name: palindromChecker,
+	states: [ WAIT, COMP, WRONG, WRONG2,END ],
+	initial_state: WAIT,
+	type: Mealy,
+	hasStack: true,
+	delta: {
+			WAIT: {
+				@: { default: [ COMP,  _]  },
+				default: { default: [ WAIT, ^$ ] }
+			   },
+			COMP: {
+				default: {
+					$: [COMP, v],
+					empty: [END, _]
+					default: [WRONG, _]
+				}
+			  },
+			WRONG: { default: { default: [WRONG2, _] } },
+			END: { default: { default: [END, _] } },
+			WRONG2: { default: { default: [WRONG2, _] } }
+		},
+	sigma: {
+			COMP: {default: { empty: "JEST PALINDROMEM!"} },
+			WRONG: { default: { default: "NIE JEST PARZYSTYM PALINDROMEM!" } }
+		}
+}

@@ -5,7 +5,7 @@ Transducer::Transducer()
 {}
 void Transducer::process(char c)
 {
-    (*sigma)(actual, c);
+    (*sigma)(actual, c, actual.top());
     actual = (*delta)(actual, c);
 }
 
@@ -22,6 +22,11 @@ void Transducer::reset()
 bool Transducer::isMoore() const
 {
     return type == Moore;
+}
+
+bool Transducer::hasEpsilonMove() const
+{
+    return sigma->hasEpsilonMove(actual.toString(), actual.top()) && delta->hasEpsilonMove(actual.toString(), actual.top());
 }
 
 bool Transducer::isMealy() const

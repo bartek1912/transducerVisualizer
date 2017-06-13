@@ -36,7 +36,7 @@ public:
     }
     char top() const
     {
-        return stack.empty() ? 0 : stack.back();
+        return stack.empty() ? '#' : stack.back();
     }
     void pop()
     {

@@ -288,7 +288,12 @@ void ApplicationWindow::run()
 
 void ApplicationWindow::nextStep()
 {
-    if(fsm_input.peek() == 0)
+    if(transducers[currentFSM]->hasEpsilon())
+    {
+        transducers[currentFSM]->nextStep('#');
+        return ;
+    }
+    else if(fsm_input.peek() == 0)
     {
         fsm_input.ignore();
         input->setText(input->text().mid(1));//cut first string

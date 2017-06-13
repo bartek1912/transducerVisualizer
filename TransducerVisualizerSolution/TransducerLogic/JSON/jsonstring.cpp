@@ -34,7 +34,7 @@ bool String::find(const std::string&)
     return true;
 }
 
-Element& String::operator[](const std::string& x)
+Element& String::operator[](const std::string&)
 {
     return *this;
 }
@@ -50,6 +50,6 @@ String::operator std::string() const
 }
 std::vector<std::string> String::identifiers() const
 {
-    return {"0"};
+    return {"_"};
 }
 }

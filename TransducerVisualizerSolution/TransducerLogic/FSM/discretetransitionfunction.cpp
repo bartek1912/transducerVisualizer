@@ -8,6 +8,10 @@ DiscreteTransitionFunction::DiscreteTransitionFunction()
 
 }
 
+bool DiscreteTransitionFunction::hasEpsilonMove(std::string state, char) const
+{
+    return transition.find(make_pair(state, '#')) != transition.end();
+}
 
 State DiscreteTransitionFunction::operator()(const State& s, char c)
 {

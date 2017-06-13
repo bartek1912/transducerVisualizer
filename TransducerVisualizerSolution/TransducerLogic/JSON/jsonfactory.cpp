@@ -10,6 +10,7 @@ Element* Factory::produce(std::istream& f)
 {
     while(isspace(f.peek()))
         f.get();
+    //char c = f.peek();
     assert(f.peek() != ']' && f.peek() != '}' && f.peek() && f.peek() != ',');
     if(f.peek() == '[')
         return new List(f);

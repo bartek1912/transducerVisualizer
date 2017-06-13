@@ -1,0 +1,39 @@
+{
+	name: un2bin,
+	states: [ 0, 1, 2, R ],
+	initial_state: 0,
+	type: Mealy,
+	delta: {
+			0: {
+				0: 1,
+				X: R
+			   },
+			1: {
+				0: 2,
+				X: R
+			   },
+			2: {
+				0: 1,
+				X: R
+			   }
+		},
+	sigma: {
+			0:
+			{
+				X: X
+			}
+			1: 
+			{
+				0: 0,
+				X: X1,
+			},
+			2:
+			{
+				X: X0,
+			}
+			R:
+			{
+				default: identity
+			}
+		}
+}

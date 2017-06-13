@@ -66,6 +66,8 @@ Edge::Edge(Node *source, Node *dest, char label)
 {
     if(label == '_')
         this->label = "else";
+    else if(label == '#')
+        this->label = "epsilon";
     setAcceptedMouseButtons(0);
     source->addEdge(this);
     dest->addEdge(this);

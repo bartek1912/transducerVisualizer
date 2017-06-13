@@ -18,6 +18,7 @@ public:
 public:
     void nextStep(char c);
     QLabel* getOutputLabel();
+    bool hasEpsilon() const;
 private:
     QLabel *readChars, *output, *transducerDescription;
     QLabel* createLabel(const QString &text);

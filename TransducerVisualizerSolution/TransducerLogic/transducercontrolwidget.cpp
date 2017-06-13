@@ -63,14 +63,19 @@ QWidget* TransducerControlWidget::getWidget()
 
 void TransducerControlWidget::nextStep(char c)
 {
-    readChars->setText(readChars->text() + c);
+    if(c != '#')
+        readChars->setText(readChars->text() + c);
     widget->nextStep(c);
     output->setText(QString::fromStdString(widget->get_output()));
     auto stack = widget->getStack();
-    stackWidget->setContent(stack.size() > 12 ? "|..." + stack.substr(stack.size() - 9) : "|" + stack);
+    stackWidget->setContent(stack.size() > 12 ? "#..." + stack.substr(stack.size() - 9) : "#" + stack);
 
 }
 QLabel* TransducerControlWidget::getOutputLabel()
 {
     return output;
+}
+bool TransducerControlWidget::hasEpsilon() const
+{
+    return widget->hasEpsilonMove();
 }

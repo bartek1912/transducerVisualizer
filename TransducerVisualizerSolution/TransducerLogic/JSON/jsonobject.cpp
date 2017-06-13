@@ -48,7 +48,7 @@ Element& Object::operator[](const std::string& x)
         for(auto x: m)
             std::cerr<<x.first<<", ";
         std::cerr<<"\n";
-        exit(0);
+        assert(false);
     }
     return *m[x];
 }
@@ -62,7 +62,7 @@ const Element& Object::operator[](const std::string& x) const
         for(auto x: m)
             std::cerr<<x.first<<", ";
         std::cerr<<"\n";
-        exit(0);
+        assert(false);
     }
     return *m.find(x)->second;
 }
