@@ -24,4 +24,3 @@ int main(int argc, char** argv)
    }
    return status;
 }
-#include "tst_transducerundertesttest.moc"
