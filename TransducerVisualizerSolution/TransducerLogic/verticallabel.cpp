@@ -1,4 +1,4 @@
-#include "verticallabel.h"
+ #include "verticallabel.h"
 #include <QPainter>
 
 VerticalLabel::VerticalLabel(QWidget *parent)
