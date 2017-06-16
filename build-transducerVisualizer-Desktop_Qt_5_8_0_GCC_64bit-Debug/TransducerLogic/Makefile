@@ -1437,6 +1437,7 @@ transducerefactory.o: ../../TransducerVisualizerSolution/TransducerLogic/Transdu
 		../../TransducerVisualizerSolution/TransducerLogic/FSM/states.h \
 		../../TransducerVisualizerSolution/TransducerLogic/FSM/discretetransitionfunction.h \
 		../../TransducerVisualizerSolution/TransducerLogic/Transducer/discreteoutfunction.h \
+		../../TransducerVisualizerSolution/TransducerLogic/Transducer/discreteoutfunctionwithstack.h \
 		../../TransducerVisualizerSolution/TransducerLogic/FSM/discretetransitionfunctionwithstack.h \
 		/home/bartek/Qt/5.8/gcc_64/include/QtCore/QRegExp \
 		/home/bartek/Qt/5.8/gcc_64/include/QtCore/qregexp.h

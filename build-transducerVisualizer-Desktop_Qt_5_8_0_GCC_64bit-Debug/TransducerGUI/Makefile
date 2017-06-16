@@ -750,23 +750,58 @@ main.o: ../../TransducerVisualizerSolution/TransducerGUI/main.cpp /home/bartek/Q
 		/home/bartek/Qt/5.8/gcc_64/include/QtGui/qtouchdevice.h \
 		/home/bartek/Qt/5.8/gcc_64/include/QtGui/qguiapplication.h \
 		/home/bartek/Qt/5.8/gcc_64/include/QtGui/qinputmethod.h \
-		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/QWidget \
 		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/QFrame \
 		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qframe.h \
-		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/QGridLayout \
-		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qgridlayout.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/QMainWindow \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qmainwindow.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qtabwidget.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtGui/qicon.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/QVBoxLayout \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qboxlayout.h \
 		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qlayout.h \
 		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qlayoutitem.h \
-		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qboxlayout.h \
-		../../TransducerVisualizerSolution/TransducerLogic/Transducer/transducerfactory.h \
-		../../TransducerVisualizerSolution/TransducerLogic/JSON/jsonfactory.h \
-		../../TransducerVisualizerSolution/TransducerLogic/JSON/jsonelement.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qgridlayout.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/QMenuBar \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qmenubar.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qmenu.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qaction.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qactiongroup.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/QMenu \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/QLabel \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qlabel.h \
+		../../TransducerVisualizerSolution/TransducerLogic/fsmwidget.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/QGraphicsView \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qgraphicsview.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtGui/qpainter.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtGui/qtextoption.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtGui/qpen.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qscrollarea.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qabstractscrollarea.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qgraphicsscene.h \
+		../../TransducerVisualizerSolution/TransducerLogic/node.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/QGraphicsItem \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qgraphicsitem.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/QGraphicsWidget \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qgraphicswidget.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qgraphicslayoutitem.h \
 		../../TransducerVisualizerSolution/TransducerLogic/Transducer/transducer.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtCore/QString \
 		../../TransducerVisualizerSolution/TransducerLogic/Transducer/outfunction.h \
 		../../TransducerVisualizerSolution/TransducerLogic/FSM/state.h \
+		../../TransducerVisualizerSolution/TransducerLogic/JSON/jsonelement.h \
 		../../TransducerVisualizerSolution/TransducerLogic/FSM/fsm.h \
 		../../TransducerVisualizerSolution/TransducerLogic/FSM/transitionfunction.h \
-		../../TransducerVisualizerSolution/TransducerLogic/FSM/states.h
+		../../TransducerVisualizerSolution/TransducerLogic/FSM/states.h \
+		../../TransducerVisualizerSolution/TransducerLogic/applicationwindow.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/QInputDialog \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qinputdialog.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qdialog.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/qlineedit.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtGui/qtextcursor.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtGui/qtextformat.h \
+		../../TransducerVisualizerSolution/TransducerLogic/transducercontrolwidget.h \
+		/home/bartek/Qt/5.8/gcc_64/include/QtWidgets/QWidget \
+		../../TransducerVisualizerSolution/TransducerLogic/stackwidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../../TransducerVisualizerSolution/TransducerGUI/main.cpp
 
 ####### Install
