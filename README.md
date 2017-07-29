@@ -1,4 +1,6 @@
 # Transducer Visualizer
+#Theoretical description
+Whole description of Transducer concept and application you can read [here]().
 ## Installation
 The application is written using [Qt Creator IDE](https://info.qt.io/download-qt-for-application-development) - the simplest way to compile it, is to download Qt IDE. Qt will inform you during compilation abut any missing libraries.
 If you don't want to download whole IDE, you can download qmake. [Here](https://stackoverflow.com/questions/3632038/can-i-use-qt-without-qmake-or-qt-creator) is more information about compiling without Qt IDE. Here are step by step instructions installing Qt for [Ubuntu](https://wiki.qt.io/Install_Qt_5_on_Ubuntu).
